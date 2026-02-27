@@ -11,7 +11,7 @@ export function PageLayout({ children }: PageLayoutProps) {
     return (
         <>
             <div
-                className={`flex w-full relative min-h-screen bg-main-gradient flex-col text-black font-avenir overflow-hidden`}
+                className={`flex w-full relative min-h-screen bg-background flex-col text-black font-sans overflow-hidden`}
             >
                 <Header />
                 <div className="flex flex-1 overflow-y-auto">

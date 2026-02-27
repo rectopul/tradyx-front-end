@@ -88,13 +88,15 @@ const ChallengeGoals: React.FC = () => {
     }
 
     return (
-        <div className="w-full mx-auto space-y-6 mb-12">
-            <div className="w-full space-y-6 bg-blue-zodiac-950/30 p-4 rounded-t-3xl border border-blue-zodiac-950/50 pb-20">
-                <div className="text-center mb-8">
-                    <h1 className="text-2xl font-semibold text-white mb-2 flex items-center justify-center gap-2">
-                        Recompensas
-                    </h1>
-                </div>
+        <div className="w-full mx-auto font-sans px-2 mb-24">
+            <div className="mt-6 flex flex-col gap-1 mb-8">
+                <h2 className="text-2xl font-bold text-gray-900">Desafios</h2>
+                <p className="text-sm text-gray-400 font-medium">
+                    Complete tarefas e ganhe recompensas exclusivas.
+                </p>
+            </div>
+
+            <div className="flex flex-col gap-4">
 
                 {alert && (
                     <Alert
@@ -116,84 +118,75 @@ const ChallengeGoals: React.FC = () => {
                     </Alert>
                 )}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {goals.map((goal) => (
-                        <div
-                            key={goal.id}
-                            className="relative overflow-hidden rounded-xl bg-secondary-gradient transition-all duration-300 hover:shadow-lg border border-tradyx-800"
-                        >
-                            {/* Header com status */}
-                            <div className="pb-2">
-                                <div className="w-full font-space flex flex-col p-4">
-                                    <div className="flex items-center gap-2">
-                                        <div
-                                            className="w-[40px] h-10 bg-contain bg-center bg-no-repeat"
-                                            style={{
-                                                backgroundImage: `url(${asset(
-                                                    "/assets/images/icons/bonus.svg"
-                                                )})`,
-                                            }}
-                                        ></div>
-                                        <div className="flex flex-col gap-3 w-3/4">
-                                            <div className="w-full relative flex-col text-sm text-tradyx-200 font-bold">
-                                                Desempenho de equipe
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-col mt-2">
-                                        <div className="w-full font-semibold text-tradyx-950 flex items-center gap-2">
-                                            {goal.title}
-                                        </div>
-                                    </div>
-
-                                    <div className="flex items-center gap-2">
-                                        <Progress
-                                            value={goal.progress_percentage}
-                                            className="h-3"
-                                        />
-                                        <div className="w-[20px] h-[20px]">
-                                            <Coin className="w-full h-full" />
-                                        </div>
-                                    </div>
-                                    <div className="flex items-center justify-between">
-                                        <div className="text-sm text-tradyx-200">
-                                            Lucro de rede
-                                        </div>
-
-                                        <div className="text-sm text-tradyx-200">
-                                            {formatCurrency(
-                                                goal.required_investment
-                                            )}
-                                        </div>
-                                    </div>
+                {goals.map((goal) => (
+                    <div
+                        key={goal.id}
+                        className="w-full bg-white rounded-[32px] p-6 border border-gray-100 shadow-sm relative overflow-hidden"
+                    >
+                        <div className="flex items-start justify-between mb-4">
+                            <div className="flex items-center gap-4">
+                                <div className="w-14 h-14 rounded-2xl bg-brand/10 flex items-center justify-center">
+                                    <img
+                                        src={asset("/assets/images/icons/bonus.svg")}
+                                        alt="bonus"
+                                        className="w-8 h-8"
+                                    />
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className="text-[10px] font-bold text-brand uppercase tracking-widest">
+                                        Desempenho de Equipe
+                                    </span>
+                                    <h3 className="text-lg font-bold text-gray-900 leading-tight">
+                                        {goal.title}
+                                    </h3>
                                 </div>
                             </div>
 
-                            {/* Efeito visual para metas completadas */}
                             {goal.is_completed && (
-                                <>
-                                    <div className="absolute top-0 right-0 w-0 h-0 border-l-[40px] border-l-transparent border-t-[40px] border-t-green-500">
-                                        <CheckCircle2 className="absolute -top-7 -right-7 h-4 w-4 text-white" />
-                                    </div>
-                                    <button onClick={() => claimBonus(goal.id)}>
-                                        Resgatar
-                                    </button>
-                                </>
+                                <div className="bg-green-100 text-green-600 p-2 rounded-full">
+                                    <CheckCircle2 className="w-5 h-5" />
+                                </div>
                             )}
                         </div>
-                    ))}
-                </div>
+
+                        <div className="space-y-3">
+                            <div className="flex justify-between items-end">
+                                <span className="text-xs font-bold text-gray-400">Progresso</span>
+                                <span className="text-sm font-bold text-gray-900">
+                                    {Math.min(100, goal.progress_percentage)}%
+                                </span>
+                            </div>
+                            <Progress
+                                value={goal.progress_percentage}
+                                className="h-2 bg-gray-100"
+                            />
+                            <div className="flex justify-between items-center text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                                <span>Lucro de rede</span>
+                                <span>{formatCurrency(goal.required_investment)}</span>
+                            </div>
+                        </div>
+
+                        {goal.is_completed && (
+                            <button
+                                onClick={() => claimBonus(goal.id)}
+                                className="w-full mt-6 bg-brand hover:bg-brand/90 text-gray-900 font-bold py-4 rounded-2xl transition-all shadow-lg shadow-brand/20 active:scale-[0.98]"
+                            >
+                                Resgatar Recompensa
+                            </button>
+                        )}
+                    </div>
+                ))}
 
                 {goals.length === 0 && (
-                    <div className="text-center py-12">
-                        <Target className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">
-                            Nenhuma meta disponível
+                    <div className="flex flex-col items-center justify-center py-16 bg-white rounded-[32px] border border-gray-100 shadow-sm px-6 text-center">
+                        <div className="w-20 h-20 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 mb-6">
+                            <Target className="w-10 h-10" />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">
+                            Nenhum desafio ativo
                         </h3>
-                        <p className="text-gray-500">
-                            As metas de desafio aparecerão aqui quando estiverem
-                            ativas.
+                        <p className="text-sm text-gray-400 font-medium">
+                            Volte mais tarde para novas oportunidades de ganhar recompensas extras.
                         </p>
                     </div>
                 )}

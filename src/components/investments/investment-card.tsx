@@ -10,53 +10,42 @@ interface PackageCardProps {
 
 export function PackageCard({ pkg, onBuy }: PackageCardProps) {
     return (
-        <div className="">
-            <div className="w-full relative pb-14 flex flex-col p-3 gap-2 rounded-xl bg-secondary-gradient shadow-top-inset shadow-tradyx-100 border border-tradyx-950">
-                <div className="font-semibold text-sm text-tradyx-200 text-center">
+        <div className="bg-white rounded-[32px] overflow-hidden shadow-sm border border-gray-100 h-full flex flex-col">
+            <div className="relative aspect-[4/3] w-full">
+                <img
+                    src={asset("/assets/images/icons/tradyx-money.svg")}
+                    alt={pkg.name}
+                    className="w-full h-full object-cover p-4 opacity-80"
+                />
+                <div className="absolute top-4 left-4 bg-brand/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full">
+                    {pkg.featured ? "VIP" : "Popular"}
+                </div>
+            </div>
+
+            <div className="p-4 flex flex-col flex-1 gap-2">
+                <h3 className="text-lg font-bold text-gray-900 leading-tight">
                     {pkg.name}
-                </div>
-                <div className="rounded-xl w-20 h-14 mx-auto bg-orange-gradient shadow-top-inset shadow-cream-can-100 border border-cream-can-600 p-2 flex justify-center items-center text-2xl font-black font-poppins text-cream-can-900 text-shadow text-shadow-size-sm text-shadow-color-cream-can-200">
-                    {parseInt(String(pkg.commission_percentage))}%
+                </h3>
+
+                <div className="flex items-center gap-2">
+                    <div className="w-6 h-6 rounded-full bg-brand flex items-center justify-center text-[10px] font-bold">
+                        $
+                    </div>
+                    <span className="text-xs text-gray-400 font-medium">
+                        by Tradyx Investment
+                    </span>
                 </div>
 
-                <div className="flex flex-col gap-1 mt-2">
-                    <div className="grid grid-cols-[15px_auto] gap-2 text-xs text-tradyx-200">
-                        <div className="">
-                            <img
-                                src={asset("/assets/images/icons/clock.svg")}
-                                alt=""
-                            />
-                        </div>
-                        Duração de {pkg.total_duration} dias
+                <div className="mt-auto flex items-center justify-between pt-2">
+                    <div className="flex flex-col">
+                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Return</span>
+                        <span className="text-base font-bold text-gray-900">
+                            {formatCurrency(pkg.return_amount)}
+                        </span>
                     </div>
 
-                    <div className="grid grid-cols-[15px_auto] gap-2 text-xs text-tradyx-200">
-                        <div className="">
-                            <img
-                                src={asset(
-                                    "/assets/images/icons/comission-money.svg"
-                                )}
-                                alt=""
-                            />
-                        </div>
-                        Retorno
-                        {formatCurrency(pkg.return_amount)}
-                    </div>
-                    <div
-                        className="grid grid-cols-[15px_auto] gap-2 text-xs text-tradyx-200"
-                        onClick={() => onBuy(pkg)}
-                    >
-                        <div className="">
-                            <img
-                                src={asset("/assets/images/icons/calendar.svg")}
-                                alt=""
-                            />
-                        </div>
-                        {formatCurrency(pkg.return_amount / pkg.total_duration)}{" "}
-                        por dia
-                    </div>
+                    <PurchaseConfirmation investment={pkg} />
                 </div>
-                <PurchaseConfirmation investment={pkg} />
             </div>
         </div>
     );

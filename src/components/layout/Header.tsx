@@ -207,11 +207,12 @@ export function Header() {
         <>
             {location.pathname === "/withdraw_account" ||
             location.pathname === "/packages" ? (
-                <header className="bg-no-repeat bg-cover bg-top flex flex-col p-4 font-avenir ">
+                <header className="bg-transparent flex flex-col p-4 font-sans ">
                     <div className="flex justify-center items-center relative font-semibold text-slate-600">
                         <Button
-                            variant="icons"
-                            className="absolute -left-4 top-1/2 -translate-y-1/2"
+                            variant="ghost"
+                            size="icon"
+                            className="absolute left-0"
                             onClick={() => navigate("/")}
                         >
                             <ChevronLeft
@@ -223,7 +224,7 @@ export function Header() {
                     </div>
                 </header>
             ) : (
-                <header className="bg-no-repeat bg-cover bg-top min-h-[180px] flex flex-col p-4 font-avenir mb-10">
+                <header className="bg-transparent flex flex-col font-sans">
                     <HeaderHome />
                 </header>
             )}

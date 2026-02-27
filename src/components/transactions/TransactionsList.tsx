@@ -103,24 +103,22 @@ export function TransactionList() {
     const isDesktop = useMediaQuery("(min-width: 768px)");
 
     return (
-        <Card className="shadow-xl border border-ebony-clay-200 mb-20">
-            <CardHeader className="bg-ebony-clay-50 border-b rounded-lg border-ebony-clay-100 p-4 sm:p-6">
-                <CardTitle className="text-2xl font-extrabold text-ebony-clay-900">
+        <Card className="shadow-sm border-gray-100 mb-24 rounded-[32px] overflow-hidden bg-white">
+            <CardHeader className="bg-white border-b border-gray-50 p-6 sm:p-8">
+                <CardTitle className="text-2xl font-bold text-gray-900">
                     Histórico de Transações
                 </CardTitle>
-                <CardDescription className="text-ebony-clay-700">
+                <CardDescription className="text-gray-400 font-medium">
                     Aqui estão todas as suas movimentações recentes. Use os
                     filtros abaixo para refinar a busca.
                 </CardDescription>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6">
+            <CardContent className="p-6 sm:p-8">
                 {/* Área de Filtros (Consistente) */}
-                <div className="flex flex-wrap items-end gap-4 mb-6 p-4 border rounded-xl bg-ebony-clay-50">
-                    {/* ... (Filtros por Tipo, Status e Botão Reset) ... */}
-
+                <div className="flex flex-wrap items-end gap-4 mb-8 p-6 rounded-3xl bg-gray-50/50 border border-gray-100">
                     {/* Exemplo de Filtro por Tipo */}
-                    <div className="flex flex-col space-y-1">
-                        <label className="text-sm font-medium text-ebony-clay-800">
+                    <div className="flex flex-col space-y-2">
+                        <label className="text-xs font-bold text-gray-400 uppercase tracking-wider ml-1">
                             Tipo de Transação
                         </label>
                         <Select
@@ -130,11 +128,10 @@ export function TransactionList() {
                                 setCurrentPage(1);
                             }}
                         >
-                            {/* ... SelectTrigger e SelectContent ... */}
-                            <SelectTrigger className="w-[180px] border-ebony-clay-300">
+                            <SelectTrigger className="w-[200px] bg-white border-gray-200 rounded-xl h-12 font-medium">
                                 <SelectValue placeholder="Todos os Tipos" />
                             </SelectTrigger>
-                            <SelectContent>
+                            <SelectContent className="rounded-xl">
                                 <SelectItem value="all">
                                     Todos os Tipos
                                 </SelectItem>
@@ -146,16 +143,15 @@ export function TransactionList() {
                                         {formatTransactionType(tp)}
                                     </SelectItem>
                                 ))}
-                                {/* Mapeamento dos tipos */}
                             </SelectContent>
                         </Select>
                     </div>
 
                     {/* Botão de Reset */}
                     <Button
-                        variant="outline"
+                        variant="ghost"
                         onClick={handleResetFilters}
-                        className="bg-ebony-clay-50 text-ebony-clay-700 hover:bg-ebony-clay-100 border-ebony-clay-300"
+                        className="h-12 px-6 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-xl font-bold"
                     >
                         <RotateCcw className="h-4 w-4 mr-2" />
                         Resetar

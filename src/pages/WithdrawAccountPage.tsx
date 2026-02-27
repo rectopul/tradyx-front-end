@@ -110,163 +110,158 @@ export function WithdrawAccountPage() {
     }
 
     return (
-        <form
-            onSubmit={handleSubmit(handleWithdrawAccount)}
-            className="w-full flex flex-col gap-1 font-avenir mb-12"
-        >
-            <div className="flex flex-col gap-1 relative mt-2">
-                <span className="text-ebony-clay-300 font-semibold text-sm">
-                    Nome completo
-                </span>
-                <Controller
-                    name="full_name"
-                    control={control}
-                    rules={{
-                        required: "O nome é obrigatório",
-                    }}
-                    render={({ field }) => (
-                        <input
-                            type="text"
-                            placeholder="Nome completo do titular da conta"
-                            {...field}
-                            className="bg-ebony-clay-950/40 border border-ebony-clay-500 text-ebony-clay-300 text-sm rounded-md w-full h-10 px-4"
-                        />
-                    )}
-                />
-                {errors.full_name && (
-                    <p className="text-red-500 text-sm mt-1">
-                        {errors.full_name.message}
-                    </p>
-                )}
+        <div className="w-full flex flex-col font-sans px-2 mb-24">
+            <div className="mt-6 flex flex-col gap-1 mb-8">
+                <h2 className="text-2xl font-bold text-gray-900">Withdraw Account</h2>
+                <p className="text-sm text-gray-400 font-medium">
+                    Configure where you want to receive your earnings.
+                </p>
             </div>
 
-            <div className="flex flex-col gap-1 relative mt-2">
-                <span className="text-ebony-clay-300 font-semibold text-sm">
-                    CPF
-                </span>
-                <Controller
-                    name="cpf"
-                    control={control}
-                    rules={{
-                        required: "O cpf é obrigatório",
-                    }}
-                    render={({ field }) => (
-                        <input
-                            type="text"
-                            placeholder="CPF do titular da conta"
-                            inputMode="numeric"
-                            {...field}
-                            className="bg-ebony-clay-950/40 border border-ebony-clay-500 text-ebony-clay-300 text-sm rounded-md w-full h-10 px-4"
-                        />
-                    )}
-                />
-                {errors.cpf && (
-                    <p className="text-red-500 text-sm mt-1">
-                        {errors.cpf.message}
-                    </p>
-                )}
-            </div>
-
-            <div className="flex flex-col gap-1 relative mt-2">
-                <span className="text-ebony-clay-300 font-semibold text-sm">
-                    Telefone para contato
-                </span>
-                <Controller
-                    name="phone"
-                    control={control}
-                    rules={{
-                        required: "O telefone de contato é obrigatório",
-                    }}
-                    render={({ field }) => (
-                        <input
-                            type="text"
-                            placeholder="Telefone para contato"
-                            inputMode="numeric"
-                            {...field}
-                            className="bg-ebony-clay-950/40 border border-ebony-clay-500 text-ebony-clay-300  text-sm rounded-md w-full h-10 px-4"
-                        />
-                    )}
-                />
-                {errors.phone && (
-                    <p className="text-red-500 text-sm mt-1">
-                        {errors.phone.message}
-                    </p>
-                )}
-            </div>
-
-            <div className="flex flex-col gap-1 relative mt-2">
-                <span className="text-ebony-clay-300 font-semibold text-sm">
-                    Tipo de chave
-                </span>
-                <Controller
-                    name="pix_key_type"
-                    control={control}
-                    rules={{
-                        required: "O tipo de chave PIX é obrigatório",
-                    }}
-                    render={({ field }) => {
-                        return (
-                            <Select
-                                value={field.value || ""} // <-- use `value` aqui
-                                onValueChange={field.onChange} // <-- atualiza o RHF
-                            >
-                                <SelectTrigger className="bg-ebony-clay-950/40 border border-ebony-clay-500 text-ebony-clay-300">
-                                    <SelectValue placeholder="Selecione um tipo de chave" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="CPF">CPF</SelectItem>
-                                    <SelectItem value="EMAIL">
-                                        E-mail
-                                    </SelectItem>
-                                    <SelectItem value="PHONE">
-                                        Telefone
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        );
-                    }}
-                />
-                {errors.pix_key_type && (
-                    <p className="text-red-500 text-sm mt-1">
-                        {errors.pix_key_type.message}
-                    </p>
-                )}
-            </div>
-
-            <div className="flex flex-col gap-1 relative mt-2">
-                <span className="text-ebony-clay-300 font-semibold text-sm">
-                    Chave PIX
-                </span>
-                <Controller
-                    name="pix_key"
-                    control={control}
-                    rules={{
-                        required: "A chave PIX é obrigatória",
-                    }}
-                    render={({ field }) => (
-                        <input
-                            type="text"
-                            placeholder="Chave PIX"
-                            {...field}
-                            className="bg-ebony-clay-950/40 border border-ebony-clay-500 text-ebony-clay-300 text-sm rounded-md w-full h-10 px-4"
-                        />
-                    )}
-                />
-                {errors.pix_key && (
-                    <p className="text-red-500 text-sm mt-1">
-                        {errors.pix_key.message}
-                    </p>
-                )}
-            </div>
-
-            <button
-                type="submit"
-                className="bg-gradient-to-r from-ebony-clay-950 to-bg-ebony-clay-800 border border-ebony-clay-300 mt-4 text-white font-semibold text-[16px] rounded-md px-4 py-3"
+            <form
+                onSubmit={handleSubmit(handleWithdrawAccount)}
+                className="w-full flex flex-col gap-6"
             >
-                {user && user.withdraw_account
-                    ? "Atualizar"
-                    : "Cadastrar conta"}
-            </button>
+                <div className="flex flex-col gap-2 relative">
+                    <label className="text-sm font-bold text-gray-900 ml-1">Full Name</label>
+                    <Controller
+                        name="full_name"
+                        control={control}
+                        rules={{
+                            required: "O nome é obrigatório",
+                        }}
+                        render={({ field }) => (
+                            <input
+                                type="text"
+                                placeholder="Titular's full name"
+                                {...field}
+                                className="bg-white border-2 border-gray-100 text-gray-900 font-bold text-base rounded-2xl w-full h-14 px-6 focus:outline-none focus:border-brand transition-colors"
+                            />
+                        )}
+                    />
+                    {errors.full_name && (
+                        <p className="text-red-500 text-xs font-medium ml-1">
+                            {errors.full_name.message}
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex flex-col gap-2 relative">
+                    <label className="text-sm font-bold text-gray-900 ml-1">CPF</label>
+                    <Controller
+                        name="cpf"
+                        control={control}
+                        rules={{
+                            required: "O cpf é obrigatório",
+                        }}
+                        render={({ field }) => (
+                            <input
+                                type="text"
+                                placeholder="000.000.000-00"
+                                inputMode="numeric"
+                                {...field}
+                                className="bg-white border-2 border-gray-100 text-gray-900 font-bold text-base rounded-2xl w-full h-14 px-6 focus:outline-none focus:border-brand transition-colors"
+                            />
+                        )}
+                    />
+                    {errors.cpf && (
+                        <p className="text-red-500 text-xs font-medium ml-1">
+                            {errors.cpf.message}
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex flex-col gap-2 relative">
+                    <label className="text-sm font-bold text-gray-900 ml-1">Phone Number</label>
+                    <Controller
+                        name="phone"
+                        control={control}
+                        rules={{
+                            required: "O telefone de contato é obrigatório",
+                        }}
+                        render={({ field }) => (
+                            <input
+                                type="text"
+                                placeholder="(00) 00000-0000"
+                                inputMode="numeric"
+                                {...field}
+                                className="bg-white border-2 border-gray-100 text-gray-900 font-bold text-base rounded-2xl w-full h-14 px-6 focus:outline-none focus:border-brand transition-colors"
+                            />
+                        )}
+                    />
+                    {errors.phone && (
+                        <p className="text-red-500 text-xs font-medium ml-1">
+                            {errors.phone.message}
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex flex-col gap-2 relative">
+                    <label className="text-sm font-bold text-gray-900 ml-1">Pix Key Type</label>
+                    <Controller
+                        name="pix_key_type"
+                        control={control}
+                        rules={{
+                            required: "O tipo de chave PIX é obrigatório",
+                        }}
+                        render={({ field }) => {
+                            return (
+                                <Select
+                                    value={field.value || ""}
+                                    onValueChange={field.onChange}
+                                >
+                                    <SelectTrigger className="bg-white border-2 border-gray-100 text-gray-900 font-bold text-base rounded-2xl w-full h-14 px-6 focus:ring-0 focus:ring-offset-0 focus:border-brand transition-colors">
+                                        <SelectValue placeholder="Select key type" />
+                                    </SelectTrigger>
+                                    <SelectContent className="rounded-2xl">
+                                        <SelectItem value="CPF">CPF</SelectItem>
+                                        <SelectItem value="EMAIL">E-mail</SelectItem>
+                                        <SelectItem value="PHONE">Phone</SelectItem>
+                                        <SelectItem value="RANDOM">Random Key</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            );
+                        }}
+                    />
+                    {errors.pix_key_type && (
+                        <p className="text-red-500 text-xs font-medium ml-1">
+                            {errors.pix_key_type.message}
+                        </p>
+                    )}
+                </div>
+
+                <div className="flex flex-col gap-2 relative">
+                    <label className="text-sm font-bold text-gray-900 ml-1">Pix Key</label>
+                    <Controller
+                        name="pix_key"
+                        control={control}
+                        rules={{
+                            required: "A chave PIX é obrigatória",
+                        }}
+                        render={({ field }) => (
+                            <input
+                                type="text"
+                                placeholder="Your Pix Key"
+                                {...field}
+                                className="bg-white border-2 border-gray-100 text-gray-900 font-bold text-base rounded-2xl w-full h-14 px-6 focus:outline-none focus:border-brand transition-colors"
+                            />
+                        )}
+                    />
+                    {errors.pix_key && (
+                        <p className="text-red-500 text-xs font-medium ml-1">
+                            {errors.pix_key.message}
+                        </p>
+                    )}
+                </div>
+
+                <button
+                    type="submit"
+                    className="bg-brand hover:bg-brand/90 text-gray-900 font-bold text-lg rounded-2xl py-5 shadow-lg shadow-brand/20 transition-all active:scale-95"
+                >
+                    {user && user.withdraw_account
+                        ? "Update Account"
+                        : "Register Account"}
+                </button>
 
             <div className="w-full max-w-2xl mb-12 mt-4 mx-auto bg-white rounded-xl shadow-md border border-slate-200 p-4">
                 {/* Cabeçalho */}
