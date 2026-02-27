@@ -180,9 +180,9 @@ export function DepositPage() {
         >
             <div className="flex flex-col mt-6 gap-6">
                 <div className="flex flex-col gap-1">
-                    <h2 className="text-2xl font-bold text-gray-900">Top Up</h2>
+                    <h2 className="text-2xl font-bold text-gray-900">Recarregar</h2>
                     <p className="text-sm text-gray-400 font-medium">
-                        Select one of the preset values or enter a custom amount
+                        Selecione um valor predefinido ou digite um valor personalizado.
                     </p>
                 </div>
 
@@ -226,7 +226,7 @@ export function DepositPage() {
             </div>
 
             <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-gray-900 ml-1">Custom Amount</label>
+                <label className="text-sm font-bold text-gray-900 ml-1">Valor Personalizado</label>
                 <div className="flex items-center bg-white border-2 border-gray-100 rounded-2xl relative focus-within:border-brand transition-colors overflow-hidden">
                     <span className="absolute left-5 text-gray-400 font-bold text-xl">
                         R$
@@ -271,8 +271,8 @@ export function DepositPage() {
             <div className="bg-brand/5 border border-brand/10 rounded-2xl p-4 flex items-start gap-3">
                 <MessageSquareWarning className="w-5 h-5 text-brand shrink-0 mt-0.5" />
                 <p className="text-xs text-brand/80 font-medium leading-relaxed">
-                    Minimum top up amount is {formatCurrency(settings?.minimum_deposit ?? 0)}.
-                    Funds will be credited automatically after Pix confirmation.
+                    O valor mínimo para recarga é {formatCurrency(settings?.minimum_deposit ?? 0)}.
+                    Os fundos são creditados automaticamente após a confirmação do Pix.
                 </p>
             </div>
 
@@ -285,7 +285,7 @@ export function DepositPage() {
                     <Spinner size="sm" />
                 ) : (
                     <>
-                        Continue with Pix <Pix className="w-6 h-6" />
+                        Continuar via Pix <Pix className="w-6 h-6" />
                     </>
                 )}
             </button>

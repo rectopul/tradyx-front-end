@@ -27,17 +27,21 @@ export function Header() {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const totalInvestment = purchases.reduce(
+    const safePurchases = purchases || [];
+    const safeWithdraws = withdraws || [];
+    const safeLedgers = ledgers || [];
+
+    const totalInvestment = safePurchases.reduce(
         (sum, elm) => sum + (elm.amount || 0),
         0
     );
 
-    const totalProfit = ledgers.reduce(
+    const totalProfit = safeLedgers.reduce(
         (sum, elm) => sum + (elm.amount || 0),
         0
     );
 
-    const totalWithdraws = withdraws.reduce(
+    const totalWithdraws = safeWithdraws.reduce(
         (sum, elm) => sum + (elm.amount || 0),
         0
     );
@@ -47,19 +51,19 @@ export function Header() {
     if (location.pathname === "/withdraw") {
         pageTitle = "Sacar";
     } else if (location.pathname === "/deposit") {
-        pageTitle = "Regarga";
+        pageTitle = "Recarga";
     } else if (location.pathname === "/withdraw_account") {
-        pageTitle = "Conta de saque";
+        pageTitle = "Conta de Saque";
     } else if (location.pathname === "/transactions") {
-        pageTitle = "Transaçoes";
+        pageTitle = "Transações";
     } else if (location.pathname === "/packages") {
         pageTitle = "Aluguel de IA";
     } else if (location.pathname === "/purchases") {
-        pageTitle = "Planos adquiridos";
+        pageTitle = "Planos Adquiridos";
     } else if (location.pathname === "/profile") {
-        pageTitle = "Informaçoes da conta";
+        pageTitle = "Informações da Conta";
     } else if (location.pathname === "/support") {
-        pageTitle = "Canais de atendimento";
+        pageTitle = "Canais de Atendimento";
     } else {
         pageTitle = "Painel";
     }

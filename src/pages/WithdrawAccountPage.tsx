@@ -112,9 +112,9 @@ export function WithdrawAccountPage() {
     return (
         <div className="w-full flex flex-col font-sans px-2 mb-24">
             <div className="mt-6 flex flex-col gap-1 mb-8">
-                <h2 className="text-2xl font-bold text-gray-900">Withdraw Account</h2>
+                <h2 className="text-2xl font-bold text-gray-900">Conta de Saque</h2>
                 <p className="text-sm text-gray-400 font-medium">
-                    Configure where you want to receive your earnings.
+                    Configure onde você deseja receber seus lucros.
                 </p>
             </div>
 
@@ -123,7 +123,7 @@ export function WithdrawAccountPage() {
                 className="w-full flex flex-col gap-6"
             >
                 <div className="flex flex-col gap-2 relative">
-                    <label className="text-sm font-bold text-gray-900 ml-1">Full Name</label>
+                    <label className="text-sm font-bold text-gray-900 ml-1">Nome Completo</label>
                     <Controller
                         name="full_name"
                         control={control}
@@ -133,7 +133,7 @@ export function WithdrawAccountPage() {
                         render={({ field }) => (
                             <input
                                 type="text"
-                                placeholder="Titular's full name"
+                                placeholder="Nome completo do titular"
                                 {...field}
                                 className="bg-white border-2 border-gray-100 text-gray-900 font-bold text-base rounded-2xl w-full h-14 px-6 focus:outline-none focus:border-brand transition-colors"
                             />
@@ -172,7 +172,7 @@ export function WithdrawAccountPage() {
                 </div>
 
                 <div className="flex flex-col gap-2 relative">
-                    <label className="text-sm font-bold text-gray-900 ml-1">Phone Number</label>
+                    <label className="text-sm font-bold text-gray-900 ml-1">Número de Telefone</label>
                     <Controller
                         name="phone"
                         control={control}
@@ -182,7 +182,7 @@ export function WithdrawAccountPage() {
                         render={({ field }) => (
                             <input
                                 type="text"
-                                placeholder="(00) 00000-0000"
+                                placeholder="(00) 90000-0000"
                                 inputMode="numeric"
                                 {...field}
                                 className="bg-white border-2 border-gray-100 text-gray-900 font-bold text-base rounded-2xl w-full h-14 px-6 focus:outline-none focus:border-brand transition-colors"
@@ -197,7 +197,7 @@ export function WithdrawAccountPage() {
                 </div>
 
                 <div className="flex flex-col gap-2 relative">
-                    <label className="text-sm font-bold text-gray-900 ml-1">Pix Key Type</label>
+                    <label className="text-sm font-bold text-gray-900 ml-1">Tipo de Chave PIX</label>
                     <Controller
                         name="pix_key_type"
                         control={control}
@@ -211,13 +211,13 @@ export function WithdrawAccountPage() {
                                     onValueChange={field.onChange}
                                 >
                                     <SelectTrigger className="bg-white border-2 border-gray-100 text-gray-900 font-bold text-base rounded-2xl w-full h-14 px-6 focus:ring-0 focus:ring-offset-0 focus:border-brand transition-colors">
-                                        <SelectValue placeholder="Select key type" />
+                                        <SelectValue placeholder="Selecione o tipo" />
                                     </SelectTrigger>
                                     <SelectContent className="rounded-2xl">
                                         <SelectItem value="CPF">CPF</SelectItem>
                                         <SelectItem value="EMAIL">E-mail</SelectItem>
-                                        <SelectItem value="PHONE">Phone</SelectItem>
-                                        <SelectItem value="RANDOM">Random Key</SelectItem>
+                                        <SelectItem value="PHONE">Telefone</SelectItem>
+                                        <SelectItem value="RANDOM">Chave Aleatória</SelectItem>
                                     </SelectContent>
                                 </Select>
                             );
@@ -231,7 +231,7 @@ export function WithdrawAccountPage() {
                 </div>
 
                 <div className="flex flex-col gap-2 relative">
-                    <label className="text-sm font-bold text-gray-900 ml-1">Pix Key</label>
+                    <label className="text-sm font-bold text-gray-900 ml-1">Chave PIX</label>
                     <Controller
                         name="pix_key"
                         control={control}
@@ -241,7 +241,7 @@ export function WithdrawAccountPage() {
                         render={({ field }) => (
                             <input
                                 type="text"
-                                placeholder="Your Pix Key"
+                                placeholder="Digite sua chave PIX"
                                 {...field}
                                 className="bg-white border-2 border-gray-100 text-gray-900 font-bold text-base rounded-2xl w-full h-14 px-6 focus:outline-none focus:border-brand transition-colors"
                             />
@@ -259,8 +259,8 @@ export function WithdrawAccountPage() {
                     className="bg-brand hover:bg-brand/90 text-gray-900 font-bold text-lg rounded-2xl py-5 shadow-lg shadow-brand/20 transition-all active:scale-95"
                 >
                     {user && user.withdraw_account
-                        ? "Update Account"
-                        : "Register Account"}
+                        ? "Atualizar Conta"
+                        : "Cadastrar Conta"}
                 </button>
 
             <div className="w-full max-w-2xl mb-12 mt-4 mx-auto bg-white rounded-xl shadow-md border border-slate-200 p-4">

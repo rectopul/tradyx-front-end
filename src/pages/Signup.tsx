@@ -465,9 +465,9 @@ const SignupForm = () => {
                         {/* Botão de Registro - Estilo "Vibrante/Glow" em Amarelo/Ouro */}
                         <button
                             type="submit"
-                            className="w-full mt-8 bg-orange-gradient hover:bg-amber-600 text-sm text-tradyx-50 font-extrabold py-4 px-4 rounded-[15px] 
+                            className="w-full mt-8 bg-orange-gradient hover:bg-amber-600 text-sm text-tradyx-50 font-extrabold py-4 px-4 rounded-[15px]
                                        transition-all duration-300 transform hover:scale-[1.01] shadow-top-inset shadow-cream-can-100
-                                       focus:outline-none focus:ring-4 focus:ring-amber-500/80 flex justify-center items-center group uppercase 
+                                       focus:outline-none focus:ring-4 focus:ring-amber-500/80 flex justify-center items-center group uppercase
                                        tracking-widest disabled:opacity-50 disabled:shadow-none"
                             disabled={currentLoading}
                         >

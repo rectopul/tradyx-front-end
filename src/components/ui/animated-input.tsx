@@ -102,7 +102,7 @@ export function AnimatedInput({
                                 }}
                                 className="text-tradyx-500 text-xl font-mono tracking-wider inline-block"
                             >
-                                {/* Renderiza um espaço em branco com um caractere especial 
+                                {/* Renderiza um espaço em branco com um caractere especial
                                     para garantir que ele tenha uma largura visual
                                 */}
                                 {char === " " ? <>&nbsp;</> : char}
@@ -113,7 +113,7 @@ export function AnimatedInput({
 
                 {/* Input nativo:
                     1. É transparente (bg-transparent).
-                    2. Sua cor de texto é a mesma do fundo (text-gray-700) para ser invisível, 
+                    2. Sua cor de texto é a mesma do fundo (text-gray-700) para ser invisível,
                        MAS o caret-white garante que o cursor nativo é branco e visível.
                     3. Overflow-x-scroll (comportamento normal de input que rola).
                     4. O padding lateral é ajustado para bater com o 'left-4' da div animada.

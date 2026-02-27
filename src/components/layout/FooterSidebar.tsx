@@ -9,10 +9,10 @@ export function FooterSidebar() {
     const { user } = useUser();
 
     const navItems = [
-        { icon: Home, path: "/", label: "Home" },
-        { icon: Bookmark, path: "/purchases", label: "Saved" },
-        { icon: Settings, path: "/withdraw_account", label: "Settings" },
-        { icon: MessageSquare, path: "/support", label: "Chat" },
+        { icon: Home, path: "/", label: "Início" },
+        { icon: Bookmark, path: "/purchases", label: "Planos" },
+        { icon: Settings, path: "/withdraw_account", label: "Conta" },
+        { icon: MessageSquare, path: "/support", label: "Suporte" },
     ];
 
     return (

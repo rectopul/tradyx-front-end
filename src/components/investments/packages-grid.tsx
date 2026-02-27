@@ -125,40 +125,41 @@ export function PackagesGrid({
         : asset("/assets/images/icons/money-coin.svg");
 
     return (
-        <div className="flex w-full flex-col gap-6">
-            <div className="w-full flex items-center justify-between">
+        <div className="flex w-full flex-col gap-6 px-2">
+            <div className="w-full flex items-center justify-between px-1">
                 <h2 className="text-2xl font-bold text-gray-900">
                     {label ? label : "Investimentos"}
                 </h2>
 
                 <button
-                    onClick={() => {}} // Could navigate to a "See All" page
-                    className="text-gray-400 font-medium hover:text-gray-600 transition-colors"
+                    onClick={() => {}}
+                    className="text-brand font-bold text-sm hover:underline transition-colors"
                 >
-                    See All
+                    Ver Todos
                 </button>
             </div>
 
             {/* Category Icons similar to the circular ones in the image */}
             {!featured && (
-                <div className="flex items-center justify-between w-full overflow-x-auto pb-2 scrollbar-hide gap-4">
+                <div className="flex items-center w-full overflow-x-auto pb-2 scrollbar-hide gap-5">
                     {[
-                        { label: "All", icon: "grid", active: true },
-                        { label: "Disaster", icon: "alert-triangle", active: false },
-                        { label: "Medical", icon: "plus-square", active: false },
-                        { label: "Education", icon: "book-open", active: false },
+                        { label: "Tudo", active: true },
+                        { label: "Cripto", active: false },
+                        { label: "Imóveis", active: false },
+                        { label: "Tech", active: false },
+                        { label: "Energia", active: false },
                     ].map((cat) => (
                         <div key={cat.label} className="flex flex-col items-center gap-2 min-w-[70px]">
-                            <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
+                            <div className={`w-14 h-14 rounded-full flex items-center justify-center transition-all ${
                                 cat.active
-                                ? "bg-brand/20 border-2 border-brand shadow-lg shadow-brand/10"
+                                ? "bg-brand text-gray-900 shadow-lg shadow-brand/20"
                                 : "bg-white border border-gray-100 shadow-sm"
                             }`}>
-                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${cat.active ? "bg-brand text-white" : "bg-gray-50 text-gray-400"}`}>
+                                <span className={`text-lg font-bold ${cat.active ? "text-gray-900" : "text-gray-300"}`}>
                                     {cat.label.charAt(0)}
-                                </div>
+                                </span>
                             </div>
-                            <span className={`text-sm font-medium ${cat.active ? "text-gray-900" : "text-gray-300"}`}>
+                            <span className={`text-xs font-bold ${cat.active ? "text-gray-900" : "text-gray-400"}`}>
                                 {cat.label}
                             </span>
                         </div>

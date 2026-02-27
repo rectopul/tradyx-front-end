@@ -198,7 +198,7 @@ export const WithdrawAccountSetup = () => {
 
     if (isSuccess) {
         return (
-            <div className="fixed inset-0 bg-ebony-clay-950 flex items-center justify-center p-4">
+            <div className="fixed inset-0 bg-slate-50 flex items-center justify-center p-4 z-[60]">
                 <motion.div
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
@@ -216,17 +216,17 @@ export const WithdrawAccountSetup = () => {
                     >
                         <CheckCircle2 className="w-24 h-24 text-green-500 mx-auto mb-6" />
                     </motion.div>
-                    <h1 className="text-3xl font-bold text-ebony-clay-100 mb-4">
-                        Conta de saque cadastrada com sucesso!
+                    <h1 className="text-3xl font-bold text-gray-900 mb-4">
+                        Conta cadastrada!
                     </h1>
-                    <p className="text-ebony-clay-300 mb-8">
-                        Agora você já pode realizar saques na plataforma.
+                    <p className="text-gray-500 mb-8 max-w-xs mx-auto">
+                        Sua conta de saque foi configurada e você já pode realizar retiradas.
                     </p>
                     <button
                         onClick={() => navigate("/")}
-                        className="px-8 py-3 bg-ebony-clay-600 hover:bg-ebony-clay-700 text-white rounded-lg transition-colors duration-200"
+                        className="px-10 py-4 bg-brand text-gray-900 font-extrabold rounded-2xl shadow-xl shadow-brand/20 active:scale-95 transition-all"
                     >
-                        Voltar ao painel
+                        Ir para o Início
                     </button>
                 </motion.div>
             </div>
@@ -234,27 +234,27 @@ export const WithdrawAccountSetup = () => {
     }
 
     return (
-        <div className="fixed inset-0 bg-ebony-clay-950 flex items-center justify-center p-4 overflow-hidden">
-            <div className="w-full max-w-2xl">
-                <div className="mb-8">
-                    <div className="flex items-center justify-center space-x-4 mb-4">
+        <div className="fixed inset-0 bg-slate-50 flex flex-col items-center p-6 z-[60] overflow-y-auto">
+            <div className="w-full max-w-md mt-10">
+                <div className="mb-12">
+                    <div className="flex items-center justify-center space-x-4">
                         {[1, 2, 3].map((step) => (
                             <div key={step} className="flex items-center">
                                 <div
-                                    className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold transition-all duration-300 ${
+                                    className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg transition-all duration-300 ${
                                         currentStep >= step
-                                            ? "bg-ebony-clay-600 text-white"
-                                            : "bg-ebony-clay-800 text-ebony-clay-400"
+                                            ? "bg-brand text-gray-900 shadow-lg shadow-brand/20"
+                                            : "bg-white text-gray-300 border border-gray-100"
                                     }`}
                                 >
                                     {step}
                                 </div>
                                 {step < 3 && (
                                     <div
-                                        className={`w-16 h-1 mx-2 transition-all duration-300 ${
+                                        className={`w-12 h-1 mx-2 rounded-full transition-all duration-300 ${
                                             currentStep > step
-                                                ? "bg-ebony-clay-600"
-                                                : "bg-ebony-clay-800"
+                                                ? "bg-brand"
+                                                : "bg-gray-200"
                                         }`}
                                     />
                                 )}
@@ -263,7 +263,7 @@ export const WithdrawAccountSetup = () => {
                     </div>
                 </div>
 
-                <div className="relative h-[500px]">
+                <div className="relative">
                     <AnimatePresence mode="wait" custom={direction}>
                         {currentStep === 1 && (
                             <motion.div
@@ -276,83 +276,67 @@ export const WithdrawAccountSetup = () => {
                                 transition={{ duration: 0.3 }}
                                 className="absolute inset-0"
                             >
-                                <div className="bg-ebony-clay-900 rounded-xl p-8">
-                                    <h2 className="text-2xl font-bold text-ebony-clay-100 mb-2">
-                                        Dados do titular
+                                <div className="bg-white rounded-[40px] p-8 shadow-sm border border-gray-100">
+                                    <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
+                                        Dados do Titular
                                     </h2>
-                                    <p className="text-ebony-clay-300 mb-6">
-                                        Informe o nome completo do titular da
-                                        conta. Deve ser o mesmo nome cadastrado
-                                        no banco. O CPF também deve pertencer ao
-                                        titular da conta de saque.
+                                    <p className="text-gray-400 text-sm font-medium mb-8 leading-relaxed">
+                                        Informe os dados do titular da conta bancária para recebimento.
                                     </p>
 
                                     <div className="space-y-6">
-                                        <div>
-                                            <label className="block text-sm font-medium text-ebony-clay-200 mb-2">
-                                                Nome completo
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-sm font-bold text-gray-900 ml-1">
+                                                Nome Completo
                                             </label>
                                             <input
                                                 type="text"
                                                 {...register("full_name", {
-                                                    required:
-                                                        "Nome completo é obrigatório",
-                                                    minLength: {
-                                                        value: 3,
-                                                        message:
-                                                            "Nome deve ter no mínimo 3 caracteres",
-                                                    },
+                                                    required: "Nome completo é obrigatório",
+                                                    minLength: { value: 3, message: "Mínimo 3 caracteres" },
                                                 })}
-                                                className="w-full px-4 py-3 bg-ebony-clay-800 border border-ebony-clay-700 rounded-lg text-ebony-clay-100 placeholder-ebony-clay-500 focus:outline-none focus:ring-2 focus:ring-ebony-clay-600 transition-all"
-                                                placeholder="Digite seu nome completo"
+                                                className="w-full h-14 px-6 bg-gray-50 border-2 border-transparent focus:border-brand focus:bg-white rounded-2xl text-gray-900 font-bold transition-all outline-none"
+                                                placeholder="Nome como no banco"
                                             />
                                             {errors.full_name && (
-                                                <p className="text-red-400 text-sm mt-1">
+                                                <p className="text-red-500 text-xs font-bold ml-1">
                                                     {errors.full_name.message}
                                                 </p>
                                             )}
                                         </div>
 
-                                        <div>
-                                            <label className="block text-sm font-medium text-ebony-clay-200 mb-2">
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-sm font-bold text-gray-900 ml-1">
                                                 CPF
                                             </label>
                                             <input
                                                 type="text"
                                                 {...register("cpf", {
-                                                    required:
-                                                        "CPF é obrigatório",
-                                                    validate: (value) =>
-                                                        isValidCPF(value) ||
-                                                        "CPF inválido",
+                                                    required: "CPF é obrigatório",
+                                                    validate: (value) => isValidCPF(value) || "CPF inválido",
                                                 })}
                                                 onChange={handleCpfChange}
                                                 value={formValues.cpf}
                                                 maxLength={14}
-                                                className="w-full px-4 py-3 bg-ebony-clay-800 border border-ebony-clay-700 rounded-lg text-ebony-clay-100 placeholder-ebony-clay-500 focus:outline-none focus:ring-2 focus:ring-ebony-clay-600 transition-all"
+                                                className="w-full h-14 px-6 bg-gray-50 border-2 border-transparent focus:border-brand focus:bg-white rounded-2xl text-gray-900 font-bold transition-all outline-none"
                                                 placeholder="000.000.000-00"
                                             />
                                             {errors.cpf && (
-                                                <p className="text-red-400 text-sm mt-1">
+                                                <p className="text-red-500 text-xs font-bold ml-1">
                                                     {errors.cpf.message}
                                                 </p>
                                             )}
                                         </div>
                                     </div>
 
-                                    <div className="mt-8 flex justify-end">
+                                    <div className="mt-10">
                                         <button
                                             type="button"
                                             onClick={goToNextStep}
-                                            disabled={
-                                                !formValues.full_name ||
-                                                !formValues.cpf ||
-                                                !!errors.full_name ||
-                                                !!errors.cpf
-                                            }
-                                            className="px-6 py-3 bg-ebony-clay-600 hover:bg-ebony-clay-700 text-white rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                                            disabled={!formValues.full_name || !formValues.cpf || !!errors.full_name || !!errors.cpf}
+                                            className="w-full py-5 bg-brand hover:bg-brand/90 text-gray-900 font-extrabold text-lg rounded-2xl shadow-xl shadow-brand/20 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
-                                            <span>Continuar</span>
+                                            <span>Próximo Passo</span>
                                             <ArrowRight className="w-5 h-5" />
                                         </button>
                                     </div>
@@ -371,125 +355,96 @@ export const WithdrawAccountSetup = () => {
                                 transition={{ duration: 0.3 }}
                                 className="absolute inset-0"
                             >
-                                <div className="bg-ebony-clay-900 rounded-xl p-8">
-                                    <h2 className="text-2xl font-bold text-ebony-clay-100 mb-2">
-                                        Telefone e chave PIX
+                                <div className="bg-white rounded-[40px] p-8 shadow-sm border border-gray-100">
+                                    <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
+                                        Contato e PIX
                                     </h2>
-                                    <p className="text-ebony-clay-300 mb-6">
-                                        Agora informe o telefone e sua chave
-                                        PIX. Pode ser um telefone, CPF ou
-                                        e-mail.
+                                    <p className="text-gray-400 text-sm font-medium mb-8 leading-relaxed">
+                                        Informe seu telefone de contato e sua chave PIX principal.
                                     </p>
 
                                     <div className="space-y-6">
-                                        <div>
-                                            <label className="block text-sm font-medium text-ebony-clay-200 mb-2">
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-sm font-bold text-gray-900 ml-1">
                                                 Telefone
                                             </label>
                                             <input
                                                 type="text"
                                                 {...register("phone", {
-                                                    required:
-                                                        "Telefone é obrigatório",
-                                                    validate: (value) =>
-                                                        isValidPhone(value) ||
-                                                        "Telefone inválido",
+                                                    required: "Telefone é obrigatório",
+                                                    validate: (value) => isValidPhone(value) || "Telefone inválido",
                                                 })}
                                                 onChange={handlePhoneChange}
                                                 value={formValues.phone}
                                                 maxLength={15}
-                                                className="w-full px-4 py-3 bg-ebony-clay-800 border border-ebony-clay-700 rounded-lg text-ebony-clay-100 placeholder-ebony-clay-500 focus:outline-none focus:ring-2 focus:ring-ebony-clay-600 transition-all"
+                                                className="w-full h-14 px-6 bg-gray-50 border-2 border-transparent focus:border-brand focus:bg-white rounded-2xl text-gray-900 font-bold transition-all outline-none"
                                                 placeholder="(00) 00000-0000"
                                             />
                                             {errors.phone && (
-                                                <p className="text-red-400 text-sm mt-1">
+                                                <p className="text-red-500 text-xs font-bold ml-1">
                                                     {errors.phone.message}
                                                 </p>
                                             )}
                                         </div>
 
-                                        <div>
-                                            <label className="block text-sm font-medium text-ebony-clay-200 mb-2">
+                                        <div className="flex flex-col gap-2">
+                                            <label className="text-sm font-bold text-gray-900 ml-1">
                                                 Chave PIX
                                             </label>
-                                            <input
-                                                type="text"
-                                                {...register("pix_key", {
-                                                    required:
-                                                        "Chave PIX é obrigatória",
-                                                })}
-                                                className="w-full px-4 py-3 bg-ebony-clay-800 border border-ebony-clay-700 rounded-lg text-ebony-clay-100 placeholder-ebony-clay-500 focus:outline-none focus:ring-2 focus:ring-ebony-clay-600 transition-all"
-                                                placeholder="Digite sua chave PIX"
-                                            />
-                                            {errors.pix_key && (
-                                                <p className="text-red-400 text-sm mt-1">
-                                                    {errors.pix_key.message}
-                                                </p>
-                                            )}
-
-                                            {!isPixValid &&
-                                                formValues.pix_key && (
-                                                    <button
-                                                        type="button"
-                                                        onClick={validatePixKey}
-                                                        disabled={
-                                                            isPixValidating ||
-                                                            !formValues.pix_key
-                                                        }
-                                                        className="mt-3 px-4 py-2 bg-ebony-clay-700 hover:bg-ebony-clay-600 text-ebony-clay-100 rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
-                                                    >
-                                                        {isPixValidating ? (
-                                                            <>
-                                                                <Loader2 className="w-4 h-4 animate-spin" />
-                                                                <span>
-                                                                    Validando
-                                                                    sua chave
-                                                                    PIX...
-                                                                </span>
-                                                            </>
-                                                        ) : (
-                                                            <span>
-                                                                Validar chave
-                                                                PIX
-                                                            </span>
-                                                        )}
-                                                    </button>
+                                            <div className="relative">
+                                                <input
+                                                    type="text"
+                                                    {...register("pix_key", {
+                                                        required: "Chave PIX é obrigatória",
+                                                    })}
+                                                    className={`w-full h-14 px-6 bg-gray-50 border-2 rounded-2xl text-gray-900 font-bold transition-all outline-none ${
+                                                        isPixValid ? "border-green-100 bg-green-50/30" : "border-transparent focus:border-brand focus:bg-white"
+                                                    }`}
+                                                    placeholder="Digite sua chave PIX"
+                                                />
+                                                {isPixValid && (
+                                                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-green-500">
+                                                        <CheckCircle2 className="w-6 h-6" />
+                                                    </div>
                                                 )}
+                                            </div>
 
-                                            {isPixValid && (
-                                                <div className="mt-3 flex items-center space-x-2 text-green-400">
-                                                    <CheckCircle2 className="w-5 h-5" />
-                                                    <span className="text-sm">
-                                                        Chave PIX validada com
-                                                        sucesso!
-                                                    </span>
-                                                </div>
+                                            {!isPixValid && formValues.pix_key && (
+                                                <button
+                                                    type="button"
+                                                    onClick={validatePixKey}
+                                                    disabled={isPixValidating}
+                                                    className="mt-2 text-sm font-bold text-brand hover:underline flex items-center gap-2"
+                                                >
+                                                    {isPixValidating ? (
+                                                        <><Loader2 className="w-4 h-4 animate-spin" /> Validando...</>
+                                                    ) : (
+                                                        "Verificar Chave PIX"
+                                                    )}
+                                                </button>
                                             )}
 
                                             {pixError && (
-                                                <p className="text-red-400 text-sm mt-3">
+                                                <p className="text-red-500 text-xs font-bold mt-1 ml-1">
                                                     {pixError}
                                                 </p>
                                             )}
                                         </div>
                                     </div>
 
-                                    <div className="mt-8 flex justify-between">
+                                    <div className="mt-10 flex gap-3">
                                         <button
                                             type="button"
                                             onClick={goToPrevStep}
-                                            className="px-6 py-3 bg-ebony-clay-800 hover:bg-ebony-clay-700 text-ebony-clay-100 rounded-lg transition-colors duration-200 flex items-center space-x-2"
+                                            className="px-6 h-14 bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold rounded-2xl transition-all"
                                         >
-                                            <ArrowLeft className="w-5 h-5" />
-                                            <span>Voltar</span>
+                                            <ArrowLeft className="w-6 h-6" />
                                         </button>
                                         <button
                                             type="button"
                                             onClick={goToNextStep}
-                                            disabled={
-                                                !isPixValid || !!errors.phone
-                                            }
-                                            className="px-6 py-3 bg-ebony-clay-600 hover:bg-ebony-clay-700 text-white rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                                            disabled={!isPixValid || !!errors.phone}
+                                            className="flex-1 h-14 bg-brand hover:bg-brand/90 text-gray-900 font-extrabold rounded-2xl shadow-xl shadow-brand/20 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
                                             <span>Avançar</span>
                                             <ArrowRight className="w-5 h-5" />
@@ -510,81 +465,52 @@ export const WithdrawAccountSetup = () => {
                                 transition={{ duration: 0.3 }}
                                 className="absolute inset-0"
                             >
-                                <div className="bg-ebony-clay-900 rounded-xl p-8 pb-14">
-                                    <h2 className="text-2xl font-bold text-ebony-clay-100 mb-2">
-                                        Confirmação dos dados
+                                <div className="bg-white rounded-[40px] p-8 shadow-sm border border-gray-100">
+                                    <h2 className="text-2xl font-extrabold text-gray-900 mb-2">
+                                        Revisar Dados
                                     </h2>
-                                    <p className="text-ebony-clay-300 mb-6 text-xs">
-                                        Esta será a conta utilizada para seus
-                                        saques na plataforma.
+                                    <p className="text-gray-400 text-sm font-medium mb-8 leading-relaxed">
+                                        Confirme se todas as informações estão corretas antes de finalizar.
                                     </p>
 
-                                    <div className="space-y-4 bg-ebony-clay-800 rounded-lg p-6 mb-8 text-sm">
-                                        <div className="flex justify-between py-3 border-b border-ebony-clay-700">
-                                            <span className="text-ebony-clay-400">
-                                                Nome completo:
-                                            </span>
-                                            <span className="text-ebony-clay-100 font-medium">
-                                                {formValues.full_name}
-                                            </span>
+                                    <div className="space-y-4 bg-gray-50 rounded-[32px] p-6 mb-10 border border-gray-100/50">
+                                        <div className="flex flex-col gap-1 border-b border-gray-100 pb-3">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Titular</span>
+                                            <span className="text-base font-bold text-gray-900">{formValues.full_name}</span>
                                         </div>
-                                        <div className="flex justify-between py-3 border-b border-ebony-clay-700">
-                                            <span className="text-ebony-clay-400">
-                                                CPF:
-                                            </span>
-                                            <span className="text-ebony-clay-100 font-medium">
-                                                {formValues.cpf}
-                                            </span>
+                                        <div className="flex flex-col gap-1 border-b border-gray-100 pb-3">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">CPF</span>
+                                            <span className="text-base font-bold text-gray-900">{formValues.cpf}</span>
                                         </div>
-                                        <div className="flex justify-between py-3 border-b border-ebony-clay-700">
-                                            <span className="text-ebony-clay-400">
-                                                Telefone:
-                                            </span>
-                                            <span className="text-ebony-clay-100 font-medium">
-                                                {formValues.phone}
-                                            </span>
+                                        <div className="flex flex-col gap-1 border-b border-gray-100 pb-3">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Telefone</span>
+                                            <span className="text-base font-bold text-gray-900">{formValues.phone}</span>
                                         </div>
-                                        <div className="flex justify-between py-3">
-                                            <span className="text-ebony-clay-400">
-                                                Chave PIX:
-                                            </span>
-                                            <span className="text-ebony-clay-100 font-medium">
-                                                {formValues.pix_key}
-                                            </span>
+                                        <div className="flex flex-col gap-1">
+                                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Chave PIX</span>
+                                            <span className="text-base font-bold text-gray-900">{formValues.pix_key}</span>
                                         </div>
                                     </div>
 
-                                    <div className="mt-8 flex justify-between">
+                                    <div className="flex gap-3">
                                         <button
                                             type="button"
                                             onClick={goToPrevStep}
                                             disabled={isSubmitting}
-                                            className="px-4 py-3 bg-ebony-clay-800 hover:bg-ebony-clay-700 text-ebony-clay-100 rounded-lg transition-colors duration-200 flex items-center space-x-2 disabled:opacity-50"
+                                            className="px-6 h-14 bg-gray-100 hover:bg-gray-200 text-gray-500 font-bold rounded-2xl transition-all disabled:opacity-50"
                                         >
-                                            <ArrowLeft className="w-5 h-5" />
-                                            <span>Voltar</span>
+                                            <ArrowLeft className="w-6 h-6" />
                                         </button>
                                         <button
                                             type="button"
                                             onClick={handleSubmit(onSubmit)}
                                             disabled={isSubmitting}
-                                            className="px-4 py-3 bg-ebony-clay-600 hover:bg-ebony-clay-700 text-white rounded-lg transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center space-x-2"
+                                            className="flex-1 h-14 bg-brand hover:bg-brand/90 text-gray-900 font-extrabold rounded-2xl shadow-xl shadow-brand/20 transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center gap-2"
                                         >
                                             {isSubmitting ? (
-                                                <>
-                                                    <Loader2 className="w-5 h-5 animate-spin" />
-                                                    <span>
-                                                        Estamos configurando sua
-                                                        conta de saque...
-                                                    </span>
-                                                </>
+                                                <><Loader2 className="w-5 h-5 animate-spin" /><span>Salvando...</span></>
                                             ) : (
-                                                <>
-                                                    <CheckCircle2 className="w-5 h-5" />
-                                                    <span>
-                                                        Concluir cadastro
-                                                    </span>
-                                                </>
+                                                <><CheckCircle2 className="w-5 h-5" /><span>Finalizar Configuração</span></>
                                             )}
                                         </button>
                                     </div>

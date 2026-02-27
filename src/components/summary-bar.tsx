@@ -11,7 +11,7 @@ export function SummaryBar() {
         <div className="relative w-full bg-white rounded-[40px] p-8 shadow-sm overflow-hidden flex items-center justify-between">
             <div className="relative z-10 flex flex-col gap-4">
                 <div className="flex flex-col gap-1">
-                    <span className="text-gray-400 text-base font-medium">Balance</span>
+                    <span className="text-gray-400 text-base font-medium">Saldo Disponível</span>
                     <h2 className="text-4xl font-bold text-gray-900">
                         {formatCurrency(user?.balance ?? 0)}
                     </h2>
@@ -21,7 +21,7 @@ export function SummaryBar() {
                     onClick={() => navigate("/deposit")}
                     className="bg-brand hover:bg-brand/90 text-gray-900 font-bold rounded-2xl px-8 py-6 text-lg w-fit shadow-lg shadow-brand/20 transition-all hover:scale-105"
                 >
-                    Top Up
+                    Recarregar
                 </Button>
             </div>
 

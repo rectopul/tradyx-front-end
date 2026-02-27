@@ -223,7 +223,7 @@ export function NewLoginForm() {
                                                         : "password"
                                                 }
                                                 // Aplica as classes de estilo aprimoradas
-                                                className="w-full bg-morph-back text-tradyx-500 shadow-right border-2 border-tradyx-950 shadow-royal-purple-700 rounded-lg h-10 py-3 pl-10 pr-3 
+                                                className="w-full bg-morph-back text-tradyx-500 shadow-right border-2 border-tradyx-950 shadow-royal-purple-700 rounded-lg h-10 py-3 pl-10 pr-3
                                                        focus:outline-none focus:ring-0 focus:ring-transparent
                                                        transition-all duration-300 placeholder:text-tradyx-300"
                                                 placeholder="Digite sua senha"
@@ -258,9 +258,9 @@ export function NewLoginForm() {
                         <div className="shadow-xl shadow-tradyx-900">
                             <button
                                 type="submit"
-                                className="w-full mt-8 bg-orange-gradient hover:bg-amber-600 text-tradyx-50 font-extrabold py-4 px-4 rounded-[15px] 
+                                className="w-full mt-8 bg-orange-gradient hover:bg-amber-600 text-tradyx-50 font-extrabold py-4 px-4 rounded-[15px]
                                        transition-all duration-300 transform hover:scale-[1.01] shadow-top-inset shadow-cream-can-100
-                                       focus:outline-none focus:ring-4 focus:ring-amber-500/80 flex justify-center items-center group uppercase 
+                                       focus:outline-none focus:ring-4 focus:ring-amber-500/80 flex justify-center items-center group uppercase
                                        tracking-widest disabled:opacity-50 disabled:shadow-none"
                                 disabled={currentLoading}
                             >

@@ -9,7 +9,7 @@ export function HeaderHome() {
                 </div>
                 <input
                     type="text"
-                    placeholder="Search"
+                    placeholder="Pesquisar"
                     className="w-full bg-white/50 backdrop-blur-sm border-none rounded-2xl py-3 pl-12 pr-4 text-sm focus:outline-none focus:ring-2 focus:ring-brand shadow-sm"
                 />
             </div>
