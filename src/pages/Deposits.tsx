@@ -176,127 +176,123 @@ export function DepositPage() {
     return (
         <form
             onSubmit={handleSubmit(handleDeposit)}
-            className="w-full flex flex-col gap-1 mb-14 font-space"
+            className="w-full flex flex-col gap-6 mb-24 font-sans px-2"
         >
-            <div className="flex flex-col mt-5 gap-2 border border-tradyx-300 p-4 rounded-xl">
-                <div className="text-tradyx-200 font-bold text-xl">Recarga</div>
-                <div className="flex gap-2">
-                    <div className="">
-                        <Coin className="w-10 h-10" />
-                    </div>
-
-                    <div className="text-tradyx-200 text-sm">
-                        Selcionee um dos valores pré estabelecidos
-                    </div>
+            <div className="flex flex-col mt-6 gap-6">
+                <div className="flex flex-col gap-1">
+                    <h2 className="text-2xl font-bold text-gray-900">Top Up</h2>
+                    <p className="text-sm text-gray-400 font-medium">
+                        Select one of the preset values or enter a custom amount
+                    </p>
                 </div>
 
-                <div className="grid grid-cols-3 gap-2 grid-rows-auto w-full mt-3">
+                <div className="grid grid-cols-3 gap-3 w-full">
                     {defsRecharge.map((df, key) => {
                         const isSelected = df === selectedRecharge;
                         return (
-                            <div className="">
-                                <button
-                                    key={key}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleButtonClick(df);
-                                    }}
-                                    className={`
-                                        relative 
-                                        flex 
-                                        flex-col
-                                        font-semibold 
-                                        text-tradyx-200
-                                        justify-center 
-                                        items-center 
-                                        bg-tradyx-900
-                                        w-full
-                                        text-xs 
-                                        border 
-                                        border-tradyx-950
-                                        overflow-hidden
-                                        rounded-md 
-                                        p-2
-                                        transition-all 
-                                        duration-200
-                                        ${
-                                            isSelected
-                                                ? "bg-secondary-gradient shadow-top-inset shadow-tradyx-400 -translate-y-1"
-                                                : ""
-                                        }
-                                    `}
-                                >
-                                    <div className="flex items-center gap-2 text-xl">
-                                        <Coin className="w-6 h-6" />
-                                        {df}
-                                    </div>
-                                    BRL {formatCurrency(df)}
-                                </button>
-                            </div>
+                            <button
+                                key={key}
+                                type="button"
+                                onClick={() => handleButtonClick(df)}
+                                className={`
+                                    relative
+                                    flex
+                                    flex-col
+                                    gap-1
+                                    font-bold
+                                    justify-center
+                                    items-center
+                                    w-full
+                                    py-4
+                                    rounded-2xl
+                                    transition-all
+                                    duration-200
+                                    border-2
+                                    ${
+                                        isSelected
+                                            ? "bg-brand/10 border-brand text-gray-900 shadow-lg shadow-brand/10"
+                                            : "bg-white border-gray-100 text-gray-300 hover:border-gray-200"
+                                    }
+                                `}
+                            >
+                                <span className="text-lg">
+                                    {df}
+                                </span>
+                                <span className="text-[10px] uppercase tracking-tighter opacity-60">BRL</span>
+                            </button>
                         );
                     })}
                 </div>
             </div>
-            <div className="flex items-center bg-pacific-blue-500/40 rounded-md relative mt-2">
-                <span className="absolute top-1/2 left-4 -translate-y-1/2 z-10 text-ebony-clay-900">
-                    <Coin className="!w-5 !h-5" />
-                </span>
-                <Controller
-                    name="amount"
-                    control={control}
-                    rules={{
-                        required: "O valor é obrigatório",
-                        min: {
-                            value: settings?.minimum_deposit ?? 0,
-                            message: "Valor mínimo de depósito não atingido.",
-                        },
-                    }}
-                    render={({ field }) => (
-                        <NumericFormat
-                            {...field}
-                            type="text"
-                            inputMode="numeric"
-                            className="w-full h-12 pl-12 bg-tradyx-500 border border-ebony-clay-400 text-tradyx-950 font-bold p-4 rounded-md text-xl focus:outline-none placeholder:text-tradyx-600"
-                            placeholder="R$ 50,00"
-                            prefix={"R$ "}
-                            decimalSeparator=","
-                            thousandSeparator="."
-                            decimalScale={2}
-                            fixedDecimalScale
-                            onValueChange={(values) => {
-                                console.log("Changed value", values.floatValue);
-                                field.onChange(values.floatValue); // Atualiza o valor do Controller
-                                setSelectedRecharge(values.floatValue || 0);
-                            }}
-                        />
-                    )}
-                />
+
+            <div className="flex flex-col gap-2">
+                <label className="text-sm font-bold text-gray-900 ml-1">Custom Amount</label>
+                <div className="flex items-center bg-white border-2 border-gray-100 rounded-2xl relative focus-within:border-brand transition-colors overflow-hidden">
+                    <span className="absolute left-5 text-gray-400 font-bold text-xl">
+                        R$
+                    </span>
+                    <Controller
+                        name="amount"
+                        control={control}
+                        rules={{
+                            required: "O valor é obrigatório",
+                            min: {
+                                value: settings?.minimum_deposit ?? 0,
+                                message: "Valor mínimo de depósito não atingido.",
+                            },
+                        }}
+                        render={({ field }) => (
+                            <NumericFormat
+                                {...field}
+                                type="text"
+                                inputMode="numeric"
+                                className="w-full h-16 pl-14 pr-4 bg-transparent text-gray-900 font-bold text-2xl focus:outline-none placeholder:text-gray-200"
+                                placeholder="0,00"
+                                decimalSeparator=","
+                                thousandSeparator="."
+                                decimalScale={2}
+                                fixedDecimalScale
+                                onValueChange={(values) => {
+                                    field.onChange(values.floatValue);
+                                    setSelectedRecharge(values.floatValue || 0);
+                                }}
+                            />
+                        )}
+                    />
+                </div>
             </div>
 
             {errors.amount && (
-                <p className="text-red-500 text-sm mt-1">
+                <p className="text-red-500 text-xs font-medium ml-1">
                     {errors.amount.message}
                 </p>
             )}
-            <p className="text-tradyx-200 text-xs flex items-center gap-2 mt-2">
-                <MessageSquareWarning className="!w-4 !h-4" />
-                Recarga mínima {formatCurrency(settings?.minimum_deposit ?? 0)}
-            </p>
+
+            <div className="bg-brand/5 border border-brand/10 rounded-2xl p-4 flex items-start gap-3">
+                <MessageSquareWarning className="w-5 h-5 text-brand shrink-0 mt-0.5" />
+                <p className="text-xs text-brand/80 font-medium leading-relaxed">
+                    Minimum top up amount is {formatCurrency(settings?.minimum_deposit ?? 0)}.
+                    Funds will be credited automatically after Pix confirmation.
+                </p>
+            </div>
 
             <button
                 type="submit"
-                className="bg-secondary-gradient shadow-top-inset shadow-tradyx-500 border flex gap-2 items-center justify-center border-tradyx-900 mt-4 text-white font-semibold text-[16px] rounded-md px-4 py-3"
+                disabled={isLoading}
+                className="bg-brand hover:bg-brand/90 text-gray-900 font-bold text-lg rounded-2xl py-5 shadow-lg shadow-brand/20 transition-all active:scale-95 flex items-center justify-center gap-3 disabled:opacity-50"
             >
                 {isLoading ? (
-                    <Spinner size="md" />
+                    <Spinner size="sm" />
                 ) : (
                     <>
-                        Recarregar <Pix className="w-6 h-6" />
+                        Continue with Pix <Pix className="w-6 h-6" />
                     </>
                 )}
             </button>
 
-            <DepositInfo settings={settings} />
+            <div className="mt-4">
+                <DepositInfo settings={settings} />
+            </div>
 
             {/* Modal de Pagamento Pix - Mobile First */}
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>

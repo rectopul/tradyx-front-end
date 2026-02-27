@@ -13,23 +13,28 @@ const UserDashboard = () => {
     return (
         <>
             <Popup />
-            <div className="container mx-auto py-6 space-y-6 relative w-full mb-20">
+            <div className="container mx-auto pt-2 pb-24 space-y-8 relative w-full">
                 <div className="w-full">
                     <SummaryBar />
                 </div>
-
-                <PurchasesSlide />
 
                 <div className="relative flex w-full">
                     <PackagesGrid
                         packages={packages}
                         onBuy={console.log}
-                        label="Planos"
-                        featured
+                        label="Need to help"
                     />
                 </div>
 
-                <ListInvestments />
+                <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                        <h2 className="text-2xl font-bold text-gray-900">Popular Organization</h2>
+                        <button className="text-gray-400 font-medium hover:text-gray-600">See All</button>
+                    </div>
+                    <div className="grid grid-cols-1 gap-4">
+                         <ListInvestments />
+                    </div>
+                </div>
             </div>
         </>
     );

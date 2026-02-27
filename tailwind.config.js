@@ -77,6 +77,7 @@ export default {
             borderRadius: {
                 DEFAULT: "12px",
                 "4xl": "32px",
+                "5xl": "40px",
             },
             colors: {
                 tradyx: {
@@ -297,7 +298,20 @@ export default {
                     900: "#025239",
                     950: "#002e20",
                 },
-
+                brand: {
+                    DEFAULT: "#FBC661",
+                    50: "#FFF9EB",
+                    100: "#FDEEC8",
+                    200: "#FBDC8C",
+                    300: "#F9C85F",
+                    400: "#F7AC28",
+                    500: "#FBC661",
+                    600: "#D5660A",
+                    700: "#B1450C",
+                    800: "#8F3611",
+                    900: "#762E11",
+                    950: "#441504",
+                },
                 "eastern-blue": {
                     50: "#ebfef4",
                     100: "#cffce3",

@@ -38,20 +38,24 @@ const ReferralCard: React.FC<ReferralCardProps> = ({
     commissionValue,
     onClick,
 }) => (
-    <div className="flex flex-col rounded-xl bg-ebony-clay-800 shadow-lg border border-ebony-clay-700 hover:border-ebony-clay-500 transition-colors duration-300">
-        <div className="flex items-center justify-between p-4 border-b border-ebony-clay-700">
-            <div className="flex items-center gap-3">
-                <div className="w-10 h-10 flex items-center justify-center rounded-full bg-ebony-clay-600">
-                    {/* Ícone ou imagem para o nível, usando um placeholder de cor */}
-                    <Users className="w-5 h-5 text-white" />
+    <div className="flex flex-col rounded-[32px] bg-white shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300 overflow-hidden">
+        <div className="flex items-center justify-between p-6 border-b border-gray-50">
+            <div className="flex items-center gap-4">
+                <div className="w-12 h-12 flex items-center justify-center rounded-2xl bg-brand/10 text-brand">
+                    <Users className="w-6 h-6" />
                 </div>
-                <div className="font-semibold text-white text-base">
-                    {title} ({commissionPercent ?? 0}%)
+                <div className="flex flex-col">
+                    <div className="font-bold text-gray-900 text-base">
+                        {title}
+                    </div>
+                    <span className="text-xs text-brand font-bold uppercase tracking-wider">
+                        {commissionPercent ?? 0}% de Comissão
+                    </span>
                 </div>
             </div>
 
             <button
-                className="text-ebony-clay-400 hover:text-ebony-clay-50 transition-colors"
+                className="w-10 h-10 rounded-full bg-gray-50 flex items-center justify-center text-gray-300 hover:text-gray-900 transition-colors"
                 onClick={onClick}
                 aria-label={`Ver detalhes do Nível ${level}`}
             >
@@ -59,20 +63,20 @@ const ReferralCard: React.FC<ReferralCardProps> = ({
             </button>
         </div>
 
-        <div className="grid grid-cols-2 p-4 text-center divide-x divide-ebony-clay-700">
-            <div className="flex flex-col items-center">
-                <h4 className="text-ebony-clay-300 text-xs font-light uppercase tracking-wider">
+        <div className="grid grid-cols-2 p-6 text-center">
+            <div className="flex flex-col items-center border-r border-gray-50">
+                <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">
                     Convidados
                 </h4>
-                <span className="font-bold text-xl text-white mt-1">
+                <span className="font-bold text-2xl text-gray-900 mt-1">
                     {inviteCount ?? 0}
                 </span>
             </div>
             <div className="flex flex-col items-center">
-                <h4 className="text-ebony-clay-300 text-xs font-light uppercase tracking-wider">
-                    Comissão Total
+                <h4 className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">
+                    Ganhos Totais
                 </h4>
-                <span className="font-bold text-xl text-ebony-clay-400 mt-1">
+                <span className="font-bold text-2xl text-brand mt-1">
                     {formatCurrency(commissionValue)}
                 </span>
             </div>
@@ -169,193 +173,105 @@ const ReferralDashboard: React.FC = () => {
     }
 
     return (
-        <>
-            <Carousel className="w-full max-w-md overflow-visible">
-                <CarouselContent className="-ml-2">
-                    <CarouselItem className="pl-2 basis-[calc(90%-0.5rem)] sm:basis-[calc(90%-0.5rem)]">
-                        <div className="w-full bg-tradyx-800/85 font-space border shadow-top-inset shadow-tradyx-200 border-tradyx-500 rounded-2xl p-4 flex flex-col text-tradyx-200">
-                            <div className="font-semibold flex items-center gap-2 text-sm">
-                                Ganhos nível 1
-                                <div className="w-5 h-5 rounded-full flex items-center justify-center bg-tradyx-800/60 border border-tradyx-900">
-                                    <DollarSign className="w-3 h-3" />
-                                </div>
-                            </div>
+        <div className="w-full flex flex-col font-sans px-2 mb-24">
+            <div className="mt-6 flex flex-col gap-1">
+                <h2 className="text-2xl font-bold text-gray-900">Centro de Afiliados</h2>
+                <p className="text-sm text-gray-400 font-medium">
+                    Gerencie sua equipe e acompanhe suas comissões.
+                </p>
+            </div>
 
-                            <div className="font-semibold flex items-center gap-2 mt-3 text-xl">
-                                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-tradyx-800/60 border border-tradyx-900">
-                                    <DollarSign className="w-4 h-4" />
-                                </div>
-                                {formatCurrency(level1Comissions)} | Quantidade:{" "}
-                                {referralStats?.level1_count}
-                            </div>
-                        </div>
-                    </CarouselItem>
-                    <CarouselItem className="pl-2 basis-[calc(90%-0.5rem)] sm:basis-[calc(90%-0.5rem)]">
-                        <div className="w-full bg-tradyx-800/85 font-space border shadow-top-inset shadow-tradyx-200 border-tradyx-500 rounded-2xl p-4 flex flex-col text-tradyx-200">
-                            <div className="font-semibold flex items-center gap-2 text-sm">
-                                Ganhos nível 2
-                                <div className="w-5 h-5 rounded-full flex items-center justify-center bg-tradyx-800/60 border border-tradyx-900">
-                                    <DollarSign className="w-3 h-3" />
-                                </div>
-                            </div>
+            <div className="mt-8 space-y-8">
+                {/* --- Estatísticas de Nível --- */}
+                <div className="space-y-4">
+                    <ReferralCard
+                        level={1}
+                        title="Equipe Nível 1"
+                        commissionPercent={settings?.comission_first_level}
+                        inviteCount={referralStats?.level1_count}
+                        commissionValue={level1Comissions}
+                        onClick={() => setReferralsView(1)}
+                    />
 
-                            <div className="font-semibold flex items-center gap-2 mt-3 text-xl">
-                                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-tradyx-800/60 border border-tradyx-900">
-                                    <DollarSign className="w-4 h-4" />
-                                </div>
-                                {formatCurrency(level2Comissions)} | Quantidade:{" "}
-                                {referralStats?.level2_count}
-                            </div>
-                        </div>
-                    </CarouselItem>
-                    <CarouselItem className="pl-2 basis-[calc(90%-0.5rem)] sm:basis-[calc(90%-0.5rem)]">
-                        <div className="w-full bg-tradyx-800/85 font-space border shadow-top-inset shadow-tradyx-200 border-tradyx-500 rounded-2xl p-4 flex flex-col text-tradyx-200">
-                            <div className="font-semibold flex items-center gap-2 text-sm">
-                                Ganhos nível 3
-                                <div className="w-5 h-5 rounded-full flex items-center justify-center bg-tradyx-800/60 border border-tradyx-900">
-                                    <DollarSign className="w-3 h-3" />
-                                </div>
-                            </div>
-
-                            <div className="font-semibold flex items-center gap-2 mt-3 text-xl">
-                                <div className="w-6 h-6 rounded-full flex items-center justify-center bg-tradyx-800/60 border border-tradyx-900">
-                                    <DollarSign className="w-4 h-4" />
-                                </div>
-                                {formatCurrency(level3Comissions)} | Quantidade:{" "}
-                                {referralStats?.level3_count}
-                            </div>
-                        </div>
-                    </CarouselItem>
-                </CarouselContent>
-                <CarouselPrevious />
-                <CarouselNext />
-            </Carousel>
-            <div className="min-h-screen bg-transparent text-white pt-8 pb-12 mb-10">
-                <div className="container mx-auto px-4">
-                    <h1 className="text-3xl font-extrabold mb-6 text-ebony-clay-100">
-                        Painel de Indicações
-                    </h1>
-                    <p className="text-ebony-clay-300 mb-8">
-                        Acompanhe o desempenho da sua equipe e as comissões
-                        geradas.
-                    </p>
-
-                    {/* --- Estatísticas de Nível --- */}
-                    <div className="space-y-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <ReferralCard
-                            level={1}
-                            title="Equipe Nível 1"
-                            commissionPercent={settings?.comission_first_level}
-                            inviteCount={referralStats?.level1_count}
-                            commissionValue={level1Comissions}
-                            onClick={() => setReferralsView(1)}
+                            level={2}
+                            title="Equipe Nível 2"
+                            commissionPercent={
+                                settings?.comission_second_level
+                            }
+                            inviteCount={referralStats?.level2_count}
+                            commissionValue={level2Comissions}
+                            onClick={() => setReferralsView(2)}
                         />
+                        <ReferralCard
+                            level={3}
+                            title="Equipe Nível 3"
+                            commissionPercent={
+                                settings?.comission_thirty_level
+                            }
+                            inviteCount={referralStats?.level3_count}
+                            commissionValue={level3Comissions}
+                            onClick={() => setReferralsView(3)}
+                        />
+                    </div>
+                </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <ReferralCard
-                                level={2}
-                                title="Equipe Nível 2"
-                                commissionPercent={
-                                    settings?.comission_second_level
-                                }
-                                inviteCount={referralStats?.level2_count}
-                                commissionValue={level2Comissions}
-                                onClick={() => setReferralsView(2)}
-                            />
-                            <ReferralCard
-                                level={3}
-                                title="Equipe Nível 3"
-                                commissionPercent={
-                                    settings?.comission_thirty_level
-                                }
-                                inviteCount={referralStats?.level3_count}
-                                commissionValue={level3Comissions}
-                                onClick={() => setReferralsView(3)} // Assumindo que Nível 3 usa '3' para a view
-                            />
+                {/* --- Instruções e Regras de Comissão --- */}
+                {settings && (
+                    <div className="bg-white rounded-[40px] shadow-sm border border-gray-100 p-8 space-y-6">
+                        <div className="flex items-center gap-4">
+                            <div className="w-12 h-12 rounded-2xl bg-brand/10 flex items-center justify-center text-brand">
+                                <Lightbulb className="w-6 h-6" />
+                            </div>
+                            <h2 className="text-xl font-bold text-gray-900">
+                                Regras de Comissão da Equipe
+                            </h2>
+                        </div>
+
+                        <div className="text-gray-500 text-sm leading-relaxed space-y-6">
+                            <p className="font-medium">
+                                Compartilhe seu link de convite para ganhar comissões quando
+                                seus amigos entrarem e investirem.
+                            </p>
+
+                            <div className="space-y-4 p-6 bg-gray-50 rounded-3xl border border-gray-100">
+                                <p className="font-bold text-gray-900 uppercase text-[10px] tracking-widest">
+                                    Exemplo (Investimento de R$ 500)
+                                </p>
+                                <ul className="space-y-3">
+                                    <li className="flex justify-between items-center">
+                                        <span className="text-gray-400">Nível 1 ({settings.comission_first_level}%)</span>
+                                        <strong className="text-gray-900 font-bold">
+                                            {formatCurrency(valuesComission.first_level)}
+                                        </strong>
+                                    </li>
+                                    <li className="flex justify-between items-center border-y border-gray-100 py-3">
+                                        <span className="text-gray-400">Nível 2 ({settings.comission_second_level}%)</span>
+                                        <strong className="text-gray-900 font-bold">
+                                            {formatCurrency(valuesComission.second_level)}
+                                        </strong>
+                                    </li>
+                                    <li className="flex justify-between items-center">
+                                        <span className="text-gray-400">Nível 3 ({settings.comission_thirty_level}%)</span>
+                                        <strong className="text-gray-900 font-bold">
+                                            {formatCurrency(valuesComission.thirty_level)}
+                                        </strong>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div className="bg-brand/5 border border-brand/10 rounded-2xl p-4 flex items-start gap-3">
+                                <TrendingUp className="w-5 h-5 text-brand shrink-0 mt-0.5" />
+                                <p className="text-xs text-brand/80 font-medium">
+                                    <span className="font-bold uppercase">Nota:</span> As comissões são geradas apenas na primeira compra de cada membro da equipe.
+                                </p>
+                            </div>
                         </div>
                     </div>
-
-                    {/* --- Instruções e Regras de Comissão --- */}
-                    {settings && (
-                        <div className="bg-ebony-clay-800 mt-8 rounded-xl shadow-2xl p-6 border border-ebony-clay-700">
-                            <div className="flex items-center gap-3 mb-4">
-                                <Lightbulb className="w-6 h-6 text-ebony-clay-400" />
-                                <h2 className="text-xl font-bold text-white">
-                                    Regras de Comissão da Equipe
-                                </h2>
-                            </div>
-
-                            <div className="text-ebony-clay-300 text-sm leading-relaxed space-y-4">
-                                <p>
-                                    Compartilhe seu link ou código de convite
-                                    para ganhar uma comissão de equipe quando
-                                    seus amigos se cadastrarem e investirem. A
-                                    estrutura é de multinível:
-                                </p>
-
-                                <div className="space-y-3 p-3 bg-ebony-clay-900 rounded-lg border border-ebony-clay-700">
-                                    <p className="font-semibold text-white">
-                                        Exemplo de Ganhos (Investimento de R$
-                                        500):
-                                    </p>
-                                    <ul className="list-disc list-inside ml-2 space-y-2">
-                                        <li className="text-sm">
-                                            Usuário A (Time 1): Comissão de{" "}
-                                            <strong className="text-ebony-clay-400">
-                                                {formatCurrency(
-                                                    valuesComission.first_level
-                                                )}
-                                            </strong>{" "}
-                                            ({settings.comission_first_level}%).
-                                        </li>
-                                        <li className="text-sm">
-                                            Usuário B (Time 2): Comissão de{" "}
-                                            <strong className="text-ebony-clay-400">
-                                                {formatCurrency(
-                                                    valuesComission.second_level
-                                                )}
-                                            </strong>{" "}
-                                            ({settings.comission_second_level}
-                                            %).
-                                        </li>
-                                        <li className="text-sm">
-                                            Usuário C (Time 3): Comissão de{" "}
-                                            <strong className="text-ebony-clay-400">
-                                                {formatCurrency(
-                                                    valuesComission.thirty_level
-                                                )}
-                                            </strong>{" "}
-                                            ({settings.comission_thirty_level}
-                                            %).
-                                        </li>
-                                    </ul>
-                                </div>
-
-                                <p>
-                                    <strong className="text-white">
-                                        Dica de Sucesso:
-                                    </strong>{" "}
-                                    Quanto mais amigos você convidar e quanto
-                                    maior o investimento deles, mais comissão
-                                    você ganha.
-                                </p>
-
-                                <p className="text-red-400 font-medium bg-red-900/20 p-3 rounded-lg border border-red-700/50">
-                                    <TrendingUp className="inline w-4 h-4 mr-2" />
-                                    <span className="font-bold">Atenção:</span>{" "}
-                                    As comissões são geradas{" "}
-                                    <strong className="text-red-300">
-                                        somente na primeira compra
-                                    </strong>{" "}
-                                    de um produto por um membro da sua equipe.
-                                    Compras repetidas não geram comissão.
-                                </p>
-                            </div>
-                        </div>
-                    )}
-                </div>
+                )}
             </div>
-        </>
+        </div>
     );
 };
 

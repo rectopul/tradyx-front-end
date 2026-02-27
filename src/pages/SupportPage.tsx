@@ -9,35 +9,46 @@ export function SupportPage() {
     };
 
     return (
-        <div className="w-full flex flex-col gap-4 font-avenir text-sm font-semibold">
-            <div
-                className="grid grid-cols-[40px_auto_40px] gap-2 items-center"
-                onClick={() => openInNewTab(settings?.whatsapp_link ?? "")}
-            >
-                <span className="text-white bg-green-600 flex justify-center items-center rounded-md h-[40px]">
-                    <Whatsapp className="w-7 h-7" />
-                </span>
-                <div className="text-pacific-blue-700">
-                    Contate o suporte via whatsapp
-                </div>
-                <span className="text-black flex justify-center items-center rounded-md h-[40px]">
-                    <ChevronRight className="w-7 h-7" />
-                </span>
+        <div className="w-full flex flex-col font-sans px-2 mb-24">
+            <div className="mt-6 flex flex-col gap-1 mb-8">
+                <h2 className="text-2xl font-bold text-gray-900">Central de Ajuda</h2>
+                <p className="text-sm text-gray-400 font-medium">
+                    Nossa equipe está aqui para apoiá-lo 24 horas por dia, 7 dias por semana.
+                </p>
             </div>
 
-            <div
-                className="grid grid-cols-[40px_auto_40px] gap-2 items-center"
-                onClick={() => openInNewTab(settings?.whatsapp_link ?? "")}
-            >
-                <span className="text-white bg-pacific-blue-400 flex justify-center items-center rounded-md h-[40px]">
-                    <Telegram className="w-7 h-7" />
-                </span>
-                <div className="text-pacific-blue-700">
-                    Contate o suporte via Telegram
-                </div>
-                <span className="text-black flex justify-center items-center rounded-md h-[40px]">
-                    <ChevronRight className="w-7 h-7" />
-                </span>
+            <div className="flex flex-col gap-4">
+                <button
+                    onClick={() => openInNewTab(settings?.whatsapp_link ?? "")}
+                    className="w-full bg-white rounded-3xl p-6 flex items-center justify-between border border-gray-100 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-green-50 flex items-center justify-center text-green-500">
+                            <Whatsapp className="w-8 h-8" />
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <span className="font-bold text-gray-900 text-lg">Suporte via WhatsApp</span>
+                            <span className="text-xs text-gray-400 font-medium">Tempo de resposta mais rápido</span>
+                        </div>
+                    </div>
+                    <ChevronRight className="w-6 h-6 text-gray-300" />
+                </button>
+
+                <button
+                    onClick={() => openInNewTab(settings?.telegram_link ?? "")}
+                    className="w-full bg-white rounded-3xl p-6 flex items-center justify-between border border-gray-100 shadow-sm transition-all hover:shadow-md active:scale-[0.98]"
+                >
+                    <div className="flex items-center gap-4">
+                        <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-500">
+                            <Telegram className="w-8 h-8" />
+                        </div>
+                        <div className="flex flex-col items-start">
+                            <span className="font-bold text-gray-900 text-lg">Comunidade Telegram</span>
+                            <span className="text-xs text-gray-400 font-medium">Participe do nosso grupo</span>
+                        </div>
+                    </div>
+                    <ChevronRight className="w-6 h-6 text-gray-300" />
+                </button>
             </div>
         </div>
     );

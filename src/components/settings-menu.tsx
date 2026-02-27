@@ -38,33 +38,37 @@ export default function SettingsMenu({ options }: SettingsMenuProps) {
                             <div
                                 key={option.id}
                                 onClick={() => setActiveOption(option)}
-                                className={`flex items-center justify-between px-4 py-4 rounded-2xl font-space font-semibold border shadow-ebony-clay-700 shadow cursor-pointer backdrop-blur-md ${
+                                className={`flex items-center justify-between px-6 py-5 rounded-[24px] font-sans font-bold border transition-all cursor-pointer bg-white border-gray-100 shadow-sm hover:shadow-md hover:border-brand/50 ${
                                     option.danger
-                                        ? "border-red-300 bg-gradient-rose text-red-500"
-                                        : "border-tradyx-950 bg-orange-gradient !text-cream-can-900 shadow-top-inset shadow-tradyx-100 text-foreground"
+                                        ? "border-red-100 bg-red-50 text-red-600"
+                                        : "text-gray-900"
                                 }`}
                             >
-                                <div className="flex items-center gap-3">
-                                    {option.icon}
-                                    <span className="font-medium">
+                                <div className="flex items-center gap-4">
+                                    <div className={`p-2 rounded-xl ${option.danger ? 'bg-red-100 text-red-600' : 'bg-brand/10 text-brand'}`}>
+                                        {option.icon}
+                                    </div>
+                                    <span className="text-base font-bold">
                                         {option.title}
                                     </span>
                                 </div>
-                                <ChevronRight className="w-4 h-4 opacity-60" />
+                                <ChevronRight className="w-5 h-5 text-gray-300" />
                             </div>
                         ))}
                         <button
                             onClick={() => logout()}
-                            className={`flex w-full items-center justify-between px-4 py-4 rounded-2xl font-sans border cursor-pointer backdrop-blur-md bg-gradient-rose shadow-top-inset shadow-red-200 border-red-900 text-red-700`}
+                            className={`flex w-full items-center justify-between px-6 py-5 rounded-[24px] font-sans font-bold border cursor-pointer transition-all bg-red-50 border-red-100 text-red-600 hover:bg-red-100 shadow-sm`}
                         >
-                            <div className="flex items-center gap-3">
-                                <Power className="w-7 h-7" strokeWidth={3} />
-                                <span className="font-semibold text-sm">
+                            <div className="flex items-center gap-4">
+                                <div className="p-2 rounded-xl bg-red-100 text-red-600">
+                                    <Power className="w-6 h-6" strokeWidth={3} />
+                                </div>
+                                <span className="font-bold text-base">
                                     Logout
                                 </span>
                             </div>
                             <ChevronRight
-                                className="w-5 h-5 opacity-60"
+                                className="w-5 h-5 text-red-300"
                                 strokeWidth={3}
                             />
                         </button>
@@ -78,19 +82,20 @@ export default function SettingsMenu({ options }: SettingsMenuProps) {
                         transition={{ duration: 0.3 }}
                         className="space-y-4"
                     >
-                        <div className="flex items-center gap-3 mb-4 ">
+                        <div className="flex items-center gap-3 mb-6">
                             <Button
-                                className="bg-gradient-to-b from-ebony-clay-300 to-ebony-clay-200"
+                                variant="ghost"
                                 size="icon"
+                                className="rounded-full hover:bg-gray-100"
                                 onClick={() => setActiveOption(null)}
                             >
-                                <ChevronLeft className="w-5 h-5" />
+                                <ChevronLeft className="w-6 h-6 text-gray-900" />
                             </Button>
-                            <h2 className="text-lg font-semibold text-white">
+                            <h2 className="text-xl font-bold text-gray-900">
                                 {activeOption.title}
                             </h2>
                         </div>
-                        <div className="p-4 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20">
+                        <div className="p-2">
                             {activeOption.content}
                         </div>
                     </motion.div>

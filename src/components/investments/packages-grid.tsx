@@ -121,41 +121,52 @@ export function PackagesGrid({
     }
 
     const iconSection = featured
-        ? `url(${asset("/assets/images/icons/vip.svg")})`
-        : `url(${asset("/assets/images/icons/money-coin.svg")})`;
+        ? asset("/assets/images/icons/vip.svg")
+        : asset("/assets/images/icons/money-coin.svg");
 
     return (
-        <div className="flex w-full flex-col">
-            <div className="w-full flex items-center">
-                <div className="w-[75%] rounded-tl-lg relative bg-no-repeat p-2 flex items-center gap-2 text-white font-semibold bg-cover bg-left">
-                    <div
-                        className="w-10 h-10 bg-cover bg-center bg-no-repeat opacity-70"
-                        style={{
-                            backgroundImage: iconSection,
-                        }}
-                    ></div>
+        <div className="flex w-full flex-col gap-6">
+            <div className="w-full flex items-center justify-between">
+                <h2 className="text-2xl font-bold text-gray-900">
                     {label ? label : "Investimentos"}
-                </div>
+                </h2>
 
-                <div className="w-[25%] flex items-center justify-end gap-2 p-2">
-                    <button
-                        className="w-7 h-7 flex items-center bg-secondary-gradient shadow-top-inset shadow-tradyx-100 border border-tradyx-900 text-white justify-center rounded-full hover:bg-orange-gradient hover:border-cream-can-900 disabled:bg-main-gradient disabled:border-tradyx-700 disabled:opacity-40"
-                        onClick={handlePrev}
-                        disabled={!canScrollPrev}
-                    >
-                        <ArrowLeft className="w-4 h-4" />
-                    </button>
-
-                    <button
-                        className="w-7 h-7 flex items-center bg-secondary-gradient shadow-top-inset shadow-tradyx-100 border border-tradyx-900 text-white justify-center rounded-full hover:bg-orange-gradient hover:border-cream-can-900 disabled:bg-main-gradient disabled:border-tradyx-700 disabled:opacity-40"
-                        onClick={handleNext}
-                        disabled={!canScrollNext}
-                    >
-                        <ArrowRight className="w-4 h-4" />
-                    </button>
-                </div>
+                <button
+                    onClick={() => {}} // Could navigate to a "See All" page
+                    className="text-gray-400 font-medium hover:text-gray-600 transition-colors"
+                >
+                    See All
+                </button>
             </div>
-            <div className="flex w-full px-2 py-4">
+
+            {/* Category Icons similar to the circular ones in the image */}
+            {!featured && (
+                <div className="flex items-center justify-between w-full overflow-x-auto pb-2 scrollbar-hide gap-4">
+                    {[
+                        { label: "All", icon: "grid", active: true },
+                        { label: "Disaster", icon: "alert-triangle", active: false },
+                        { label: "Medical", icon: "plus-square", active: false },
+                        { label: "Education", icon: "book-open", active: false },
+                    ].map((cat) => (
+                        <div key={cat.label} className="flex flex-col items-center gap-2 min-w-[70px]">
+                            <div className={`w-16 h-16 rounded-full flex items-center justify-center transition-all ${
+                                cat.active
+                                ? "bg-brand/20 border-2 border-brand shadow-lg shadow-brand/10"
+                                : "bg-white border border-gray-100 shadow-sm"
+                            }`}>
+                                <div className={`w-10 h-10 rounded-full flex items-center justify-center ${cat.active ? "bg-brand text-white" : "bg-gray-50 text-gray-400"}`}>
+                                    {cat.label.charAt(0)}
+                                </div>
+                            </div>
+                            <span className={`text-sm font-medium ${cat.active ? "text-gray-900" : "text-gray-300"}`}>
+                                {cat.label}
+                            </span>
+                        </div>
+                    ))}
+                </div>
+            )}
+
+            <div className="flex w-full py-2">
                 <Carousel
                     className="w-full"
                     setApi={setApi}

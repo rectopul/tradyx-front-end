@@ -30,7 +30,7 @@ export function WithdrawPage() {
 
     const { settings } = useUser();
     const {
-        control, // Importe o 'control' do useForm
+        control,
         handleSubmit,
         setValue,
         formState: { errors },
@@ -96,146 +96,125 @@ export function WithdrawPage() {
 
     if (!user) {
         return (
-            <>
+            <div className="flex items-center justify-center min-h-screen">
                 <Spinner />
-            </>
+            </div>
         );
     }
 
     return (
-        <>
+        <div className="w-full flex flex-col font-sans px-2 mb-24">
+            <div className="mt-6 flex flex-col gap-1">
+                <h2 className="text-2xl font-bold text-gray-900">Withdraw Funds</h2>
+                <p className="text-sm text-gray-400 font-medium">
+                    Available to withdraw: <span className="text-gray-900 font-bold">{formatCurrency(user.available_to_withdraw)}</span>
+                </p>
+            </div>
+
             <form
                 onSubmit={handleSubmit(handleWithdraw)}
-                className="w-full flex flex-col gap-1 font-avenir"
+                className="w-full flex flex-col gap-6 mt-8"
             >
-                <p className="text-ebony-clay-300 text-sm flex items-center gap-2 mt-2">
-                    <Wallet className="!w-4 !h-4" />
-                    Saque mínimo{" "}
-                    {formatCurrency(settings?.minimum_withdraw ?? 0)}
-                </p>
-
-                <div className="flex items-center bg-ebony-clay-300/50 rounded-md relative mt-2">
-                    <span className="text-pacific-blue-950 absolute top-1/2 left-4 -translate-y-1/2 z-10">
-                        <Coin className="!w-5 !h-5" />
-                    </span>
-                    <Controller
-                        name="amount"
-                        control={control}
-                        rules={{
-                            required: "O valor é obrigatório",
-                            min: {
-                                value: settings?.minimum_withdraw ?? 0,
-                                message: "Valor mínimo de saque não atingido.",
-                            },
-                        }}
-                        render={({ field }) => {
-                            const { onChange, value } = field;
-                            return (
-                                <NumericFormat
-                                    value={value} // valor do RHF
-                                    type="text"
-                                    inputMode="numeric"
-                                    className="w-full h-12 placeholder:text-ebony-clay-950 pl-12 bg-transparent text-ebony-clay-950 font-semibold border-0 p-4 rounded-md text-sm focus:outline-none"
-                                    placeholder="Informe o valor do saque"
-                                    prefix="R$ "
-                                    decimalSeparator=","
-                                    thousandSeparator="."
-                                    decimalScale={2}
-                                    fixedDecimalScale
-                                    onValueChange={(values) => {
-                                        // envia apenas o número puro
-                                        onChange(values.floatValue ?? 0);
-                                    }}
-                                />
-                            );
-                        }}
-                    />
+                <div className="flex flex-col gap-2">
+                    <label className="text-sm font-bold text-gray-900 ml-1">Withdraw Amount</label>
+                    <div className="flex items-center bg-white border-2 border-gray-100 rounded-2xl relative focus-within:border-brand transition-colors overflow-hidden">
+                        <span className="absolute left-5 text-gray-400 font-bold text-xl">
+                            R$
+                        </span>
+                        <Controller
+                            name="amount"
+                            control={control}
+                            rules={{
+                                required: "O valor é obrigatório",
+                                min: {
+                                    value: settings?.minimum_withdraw ?? 0,
+                                    message: "Valor mínimo de saque não atingido.",
+                                },
+                            }}
+                            render={({ field }) => {
+                                const { onChange, value } = field;
+                                return (
+                                    <NumericFormat
+                                        value={value}
+                                        type="text"
+                                        inputMode="numeric"
+                                        className="w-full h-16 pl-14 pr-4 bg-transparent text-gray-900 font-bold text-2xl focus:outline-none placeholder:text-gray-200"
+                                        placeholder="0,00"
+                                        decimalSeparator=","
+                                        thousandSeparator="."
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                        onValueChange={(values) => {
+                                            onChange(values.floatValue ?? 0);
+                                        }}
+                                    />
+                                );
+                            }}
+                        />
+                    </div>
                 </div>
 
                 {errors.amount && (
-                    <p className="text-red-500 text-sm mt-1">
+                    <p className="text-red-500 text-xs font-medium ml-1">
                         {errors.amount.message}
                     </p>
                 )}
 
+                <div className="bg-brand/5 border border-brand/10 rounded-2xl p-4 flex items-start gap-3">
+                    <Wallet className="w-5 h-5 text-brand shrink-0 mt-0.5" />
+                    <p className="text-xs text-brand/80 font-medium leading-relaxed">
+                        Minimum withdraw amount is {formatCurrency(settings?.minimum_withdraw ?? 0)}.
+                    </p>
+                </div>
+
                 <button
                     type="submit"
-                    className="bg-secondary-gradient shadow-top-inset shadow-tradyx-500 border flex gap-2 items-center justify-center border-tradyx-900 mt-4 text-white font-semibold text-[16px] rounded-md px-4 py-3"
+                    className="bg-brand hover:bg-brand/90 text-gray-900 font-bold text-lg rounded-2xl py-5 shadow-lg shadow-brand/20 transition-all active:scale-95 flex items-center justify-center gap-3"
                 >
-                    <Pix /> Sacar
+                    <Pix className="w-6 h-6" /> Withdraw with Pix
                 </button>
 
-                <div className="w-full max-w-2xl mb-20 mt-4 mx-auto bg-white rounded-xl shadow-md border border-slate-200 p-4 pb-8">
-                    {/* Cabeçalho */}
-                    <div className="flex items-center gap-2 mb-3">
-                        <AlertCircle className="w-6 h-6 text-pacific-blue-500" />
-                        <p className="text-slate-800 font-semibold">
-                            Lembrete:
-                        </p>
+                <div className="w-full bg-white rounded-3xl shadow-sm border border-gray-100 p-6 space-y-4">
+                    <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-blue-500">
+                            <AlertCircle className="w-6 h-6" />
+                        </div>
+                        <h3 className="text-gray-900 font-bold">Important Information</h3>
                     </div>
 
-                    {/* Conteúdo */}
-                    <div className="text-sm leading-relaxed text-slate-700 space-y-4">
-                        <p>
-                            1.{" "}
-                            <span className="text-red-500 font-semibold">
-                                Valor mínimo de saque
-                            </span>
-                            :
-                            <span className="text-red-500 font-semibold">
-                                {formatCurrency(
-                                    settings?.minimum_withdraw ?? 0
-                                )}
-                            </span>
-                            . Selecione um valor que corresponda ao valor do seu
-                            saque, caso contrário, o valor não será transferido
-                            para sua conta.
-                        </p>
-
-                        <p>
-                            2.{" "}
-                            <span className="text-red-500 font-semibold">
-                                Nova solicitação de saque
-                            </span>
-                            : Sempre que fizer um saque, você deverá acessar a
-                            plataforma {settings?.site_name ?? ""} e criar uma
-                            nova solicitação de saque.
-                        </p>
-
-                        <p>
-                            3.{" "}
-                            <span className="text-red-500 font-semibold">
-                                Recibo de saque
-                            </span>
-                            : Se o saldo da sua plataforma{" "}
-                            {settings?.site_name ?? ""} não for debitado em 30
-                            minutos, entre em contato com o Suporte pela
-                            plataforma
-                            {settings?.site_name ?? ""}.
-                        </p>
-
-                        <p>
-                            4.{" "}
-                            <span className="text-red-500 font-semibold">
-                                Método de pagamento
-                            </span>
-                            : O método de pagamentos padrão da plataforma{" "}
-                            {settings?.site_name ?? ""} será sempre via PIX.
-                        </p>
+                    <div className="space-y-4">
+                        <div className="flex gap-3">
+                            <span className="text-brand font-bold">01.</span>
+                            <p className="text-xs text-gray-500 leading-relaxed">
+                                Ensure your withdrawal amount is correct. Withdrawals below the minimum
+                                <span className="text-gray-900 font-bold"> ({formatCurrency(settings?.minimum_withdraw ?? 0)}) </span>
+                                will not be processed.
+                            </p>
+                        </div>
+                        <div className="flex gap-3">
+                            <span className="text-brand font-bold">02.</span>
+                            <p className="text-xs text-gray-500 leading-relaxed">
+                                Always create a new withdrawal request in the {settings?.site_name} platform for each transaction.
+                            </p>
+                        </div>
+                        <div className="flex gap-3">
+                            <span className="text-brand font-bold">03.</span>
+                            <p className="text-xs text-gray-500 leading-relaxed">
+                                Withdrawals are typically processed within 20 minutes to 1 hour. If not received after 3 hours, contact support.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
-                {/* Modal de Confirmação de Saque - Mobile First */}
                 <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
                     <DialogContent className="w-[90%] max-w-sm rounded-2xl p-5 shadow-lg">
-                        {/* Header */}
                         <DialogHeader className="text-center space-y-2">
                             <div className="flex items-center justify-center">
-                                <div className="w-14 h-14 flex items-center justify-center rounded-full bg-pacific-blue-100 text-pacific-blue-600">
+                                <div className="w-14 h-14 flex items-center justify-center rounded-full bg-brand/10 text-brand">
                                     <Check className="w-8 h-8" />
                                 </div>
                             </div>
-                            <DialogTitle className="text-lg font-semibold text-pacific-blue-700">
+                            <DialogTitle className="text-lg font-semibold text-gray-900">
                                 Saque registrado!
                             </DialogTitle>
                             <DialogDescription className="text-sm text-slate-600">
@@ -244,12 +223,11 @@ export function WithdrawPage() {
                             </DialogDescription>
                         </DialogHeader>
 
-                        {/* Mensagem de Confirmação */}
                         <div className="text-center mt-4 space-y-2">
                             <p className="text-sm text-slate-700">
                                 Os saques são processados no prazo de:
                             </p>
-                            <p className="text-base font-semibold text-pacific-blue-600">
+                            <p className="text-base font-semibold text-brand">
                                 20 minutos até 1 hora
                             </p>
                             <p className="text-[12px] text-slate-500">
@@ -258,11 +236,10 @@ export function WithdrawPage() {
                             </p>
                         </div>
 
-                        {/* Botão de Fechar */}
                         <div className="mt-6 flex justify-center">
                             <Button
                                 onClick={() => setIsDialogOpen(false)}
-                                className="w-full bg-pacific-blue-500 hover:bg-pacific-blue-600 text-white rounded-md py-2 text-sm"
+                                className="w-full bg-brand hover:bg-brand/90 text-gray-900 rounded-xl py-2 text-sm font-bold"
                             >
                                 Entendido
                             </Button>
@@ -270,6 +247,6 @@ export function WithdrawPage() {
                     </DialogContent>
                 </Dialog>
             </form>
-        </>
+        </div>
     );
 }
