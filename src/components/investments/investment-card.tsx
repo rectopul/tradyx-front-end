@@ -17,29 +17,29 @@ export function PackageCard({ pkg, onBuy }: PackageCardProps) {
                     alt={pkg.name}
                     className="w-full h-full object-cover p-4 opacity-80"
                 />
-                <div className="absolute top-4 left-4 bg-brand/90 backdrop-blur-sm text-gray-900 text-xs font-bold px-3 py-1.5 rounded-full">
-                    {pkg.featured ? "VIP" : "Popular"}
+                <div className="absolute top-4 left-4 bg-brand/90 backdrop-blur-sm text-gray-900 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    {pkg.featured ? "VIP" : "Recomendado"}
                 </div>
             </div>
 
             <div className="p-4 flex flex-col flex-1 gap-2">
-                <h3 className="text-lg font-bold text-gray-900 leading-tight">
+                <h3 className="text-base font-bold text-gray-900 leading-tight">
                     {pkg.name}
                 </h3>
 
                 <div className="flex items-center gap-2">
-                    <div className="w-6 h-6 rounded-full bg-brand flex items-center justify-center text-[10px] font-bold">
+                    <div className="w-5 h-5 rounded-full bg-brand/10 text-brand flex items-center justify-center text-[10px] font-bold">
                         $
                     </div>
-                    <span className="text-xs text-gray-400 font-medium">
-                        by Tradyx Investment
+                    <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                        Tradyx Invest
                     </span>
                 </div>
 
-                <div className="mt-auto flex items-center justify-between pt-2">
+                <div className="mt-auto flex items-center justify-between pt-3 border-t border-gray-50">
                     <div className="flex flex-col">
-                        <span className="text-[10px] text-gray-400 font-bold uppercase tracking-wider">Return</span>
-                        <span className="text-base font-bold text-gray-900">
+                        <span className="text-[9px] text-gray-400 font-bold uppercase tracking-wider">Retorno</span>
+                        <span className="text-sm font-extrabold text-gray-900">
                             {formatCurrency(pkg.return_amount)}
                         </span>
                     </div>

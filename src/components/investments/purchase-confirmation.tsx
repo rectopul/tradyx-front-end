@@ -9,12 +9,13 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet";
 import { Package } from "../admin/packages/columns";
-import { X } from "lucide-react";
+import { X, TrendingUp, Clock, ShieldCheck, Wallet } from "lucide-react";
 import { asset, formatCurrency } from "@/utils/helpers";
 import { toast } from "sonner";
 import { purchasePackage } from "@/services/transactionsService";
 import { useState } from "react";
 import { useUser } from "@/contexts/UserProvider";
+import { Button } from "../ui/button";
 
 interface PurchaseConfirmationProps {
     investment: Package;
@@ -22,26 +23,23 @@ interface PurchaseConfirmationProps {
 
 interface DetailItemProps {
     label: string;
-    value: string | number; // Permite que o valor seja string (como moeda formatada) ou número
-    color: string;
-    isBold?: boolean; // Opcional, será 'false' se não for passado
+    value: string | number;
+    icon?: React.ElementType;
+    color?: string;
 }
 
-// 2. Componente com Tipagem (DetailItem)
 const DetailItem = ({
     label,
     value,
-    color,
-    isBold = false,
+    icon: Icon,
+    color = "text-gray-900",
 }: DetailItemProps) => (
-    <div className="flex justify-between items-center text-sm font-space">
-        <span className="text-white/80">{label}:</span>
-        {/* Classes dinâmicas para a cor e negrito */}
-        <span
-            className={`${color} ${
-                isBold ? "font-extrabold text-base" : "font-bold"
-            }`}
-        >
+    <div className="flex items-center justify-between p-4 bg-gray-50 rounded-2xl border border-gray-100/50">
+        <div className="flex items-center gap-3">
+            {Icon && <div className="p-2 bg-white rounded-xl shadow-sm text-brand"><Icon size={18} /></div>}
+            <span className="text-sm font-bold text-gray-400">{label}</span>
+        </div>
+        <span className={`text-base font-extrabold ${color}`}>
             {value}
         </span>
     </div>
@@ -60,8 +58,9 @@ export function PurchaseConfirmation({
         try {
             const confirmation = await purchasePackage(investment.id);
             subtractBalance(confirmation.purchase.amount);
+            toast.success("Plano adquirido com sucesso!");
         } catch (error) {
-            toast.error("Erro ao processar compra");
+            toast.error("Erro ao processar compra. Verifique seu saldo.");
         } finally {
             setIsBuying(false);
             setOpen(false);
@@ -70,118 +69,82 @@ export function PurchaseConfirmation({
 
     return (
         <Sheet open={open} onOpenChange={setOpen}>
-            <SheetTrigger className="bg-transparent" asChild>
-                <button
-                    className="rounded-xl w-full absolute bottom-0 left-0 mt-1 mx-auto bg-orange-gradient shadow-top-inset shadow-cream-can-100 border border-cream-can-600 p-2 flex justify-center items-center text-sm font-black font-poppins text-cream-can-900 text-shadow text-shadow-size-sm text-shadow-color-cream-can-200"
-                    aria-label={`Comprar ${investment.title}`}
-                >
-                    {formatCurrency(investment.total_investment)}
-                </button>
+            <SheetTrigger asChild>
+                <Button className="bg-brand hover:bg-brand/90 text-gray-900 font-bold rounded-2xl px-5 py-2 h-auto text-xs shadow-lg shadow-brand/10 transition-all active:scale-95">
+                    Investir
+                </Button>
             </SheetTrigger>
             <SheetContent
                 side="bottom"
-                // Mantém as classes de fundo e estilo
-                className="h-[600px] bg-main-gradient data-[state=open]:shadow-top-inset shadow-tradyx-100 border-t border-tradyx-950 backdrop-blur-md rounded-t-[30px] font-avenir text-white p-4 sm:p-6"
+                className="h-auto max-h-[90vh] bg-white border-t border-gray-100 rounded-t-[40px] p-6 sm:p-10 font-sans outline-none overflow-y-auto"
             >
-                <SheetHeader className="text-center pb-4 mt-5 relative font-space">
-                    <SheetTitle className="text-white text-xl w-52 mx-auto font-bold border-b-2 border-tradyx-700 pb-2">
-                        Confirmar compra
-                    </SheetTitle>
-                    <SheetDescription className="text-white/70 font-normal text-sm pt-2">
-                        Confirmar a compra de **{investment.name}**
-                    </SheetDescription>
+                <div className="w-12 h-1.5 bg-gray-100 rounded-full mx-auto mb-8"></div>
 
-                    <SheetClose asChild>
-                        <button className="rounded-xl absolute -top-7 right-0 w-8 h-8 mt-1 mx-auto bg-orange-gradient shadow-top-inset shadow-cream-can-100 border border-cream-can-600 flex justify-center items-center text-sm font-black font-poppins text-cream-can-900 text-shadow text-shadow-size-sm text-shadow-color-cream-can-200 z-20">
-                            <X className="w-5 h-5" strokeWidth={3} />
-                        </button>
-                    </SheetClose>
+                <SheetHeader className="text-left space-y-2 mb-8">
+                    <div className="flex items-center justify-between">
+                        <div className="flex flex-col">
+                            <span className="text-xs font-bold text-brand uppercase tracking-widest">Confirmação</span>
+                            <SheetTitle className="text-3xl font-extrabold text-gray-900">
+                                {investment.name}
+                            </SheetTitle>
+                        </div>
+                        <SheetClose asChild>
+                            <button className="p-3 bg-gray-50 rounded-full text-gray-400 hover:text-gray-900 transition-colors">
+                                <X size={20} />
+                            </button>
+                        </SheetClose>
+                    </div>
+                    <SheetDescription className="text-base text-gray-500 font-medium">
+                        Revise os detalhes do seu investimento antes de confirmar.
+                    </SheetDescription>
                 </SheetHeader>
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                    {/* Bloco de Imagem e Descrição */}
-                    <div className="w-full sm:w-2/5 flex flex-col items-center">
-                        <figure className="w-full max-w-xs h-32 rounded-lg overflow-hidden border border-ebony-clay-700 shadow-lg">
-                            <img
-                                src={
-                                    asset(investment.photo) ||
-                                    "https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=400"
-                                }
-                                onError={(e) => {
-                                    e.currentTarget.src =
-                                        "https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=400";
-                                }}
-                                className="w-full h-full object-cover"
-                                alt={`Imagem do pacote ${investment.name}`}
-                            />
-                        </figure>
-                        <p className="text-xs text-white/60 mt-2 text-center hidden sm:block">
-                            {investment.description ||
-                                "Descrição não disponível."}
-                        </p>
-                    </div>
-
-                    {/* Bloco de Detalhes Financeiros (Mais profissional e detalhado) */}
-                    <div className="flex-1 space-y-3 p-3 bg-ebony-clay-900/40 rounded-lg border border-ebony-clay-700">
-                        {/* Linha 1: Valor e Duração */}
-                        <DetailItem
-                            label="Valor do Investimento"
-                            value={formatCurrency(investment.total_investment)}
-                            color="text-pacific-blue-400"
-                            isBold
-                        />
-
-                        <DetailItem
-                            label="Duração Total"
-                            value={`${investment.total_duration} ${investment.frequency_unit}s`}
-                            color="text-yellow-400"
-                            isBold
-                        />
-
-                        {/* Divisor */}
-                        <div className="border-t border-ebony-clay-700 my-2" />
-
-                        {/* Linha 2: Retornos (Mais visível) */}
-                        <DetailItem
-                            label="Retorno Diário Estimado"
-                            value={formatCurrency(dailyReturn)}
-                            color="text-green-400"
-                        />
-
-                        <DetailItem
-                            label="Retorno Total (Estimado)"
-                            // Assumindo que 'return_amount' é o valor total de retorno no fim do ciclo.
-                            value={formatCurrency(investment.return_amount)}
-                            color="text-green-400"
-                        />
-
-                        {/* Linha 3: Taxas */}
-                        <DetailItem
-                            label="Comissão da Plataforma"
-                            value={`${investment.commission_percentage}%`}
-                            color="text-red-400"
-                        />
-                    </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <DetailItem
+                        label="Valor do Investimento"
+                        value={formatCurrency(investment.total_investment)}
+                        icon={Wallet}
+                    />
+                    <DetailItem
+                        label="Retorno Total Estimado"
+                        value={formatCurrency(investment.return_amount)}
+                        icon={TrendingUp}
+                        color="text-green-600"
+                    />
+                    <DetailItem
+                        label="Duração do Plano"
+                        value={`${investment.total_duration} ${investment.frequency_unit === 'day' ? 'Dias' : investment.frequency_unit}`}
+                        icon={Clock}
+                    />
+                    <DetailItem
+                        label="Retorno Diário"
+                        value={formatCurrency(dailyReturn)}
+                        icon={ShieldCheck}
+                        color="text-brand"
+                    />
                 </div>
 
-                {/* Footer com Ações */}
-                <SheetFooter className="grid grid-cols-2 gap-4 mt-6 pt-4 border-t border-ebony-clay-700/50">
-                    {/* Botão de Investir */}
+                <div className="bg-brand/5 border border-brand/10 rounded-3xl p-6 mb-10">
+                    <p className="text-sm text-brand/80 font-medium leading-relaxed">
+                        Ao confirmar, o valor de <span className="font-bold text-gray-900">{formatCurrency(investment.total_investment)}</span> será debitado do seu saldo disponível e o plano será ativado imediatamente.
+                    </p>
+                </div>
+
+                <SheetFooter className="flex flex-col gap-3 sm:flex-row sm:justify-between">
                     <button
-                        className="rounded-xl w-full mt-1 mx-auto bg-orange-gradient shadow-top-inset shadow-cream-can-100 border border-cream-can-600 p-2 flex justify-center items-center text-sm font-black font-poppins text-cream-can-900 text-shadow text-shadow-size-sm text-shadow-color-cream-can-200"
+                        className="w-full sm:flex-1 py-5 bg-brand hover:bg-brand/90 text-gray-900 font-bold text-lg rounded-[24px] shadow-xl shadow-brand/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50"
                         onClick={handleBuyPackage}
                         disabled={isBuying}
                     >
                         {isBuying ? (
-                            <span className="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+                            <span className="animate-spin h-6 w-6 border-3 border-gray-900 border-t-transparent rounded-full"></span>
                         ) : (
-                            "Confirmar"
+                            <>Confirmar Investimento</>
                         )}
                     </button>
 
-                    {/* Botão de Cancelar */}
                     <button
-                        className="bg-red-700 hover:bg-red-600 transition-colors rounded-lg text-white text-base font-bold uppercase h-12 flex items-center justify-center shadow-lg shadow-red-900/50"
+                        className="w-full sm:w-auto px-10 py-5 bg-gray-50 hover:bg-gray-100 text-gray-400 font-bold text-lg rounded-[24px] transition-colors"
                         onClick={() => setOpen(false)}
                     >
                         Cancelar

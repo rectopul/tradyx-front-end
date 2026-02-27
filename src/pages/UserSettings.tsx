@@ -117,7 +117,7 @@ const UserSettingsPage = () => {
     const options: SettingOption[] = [
         {
             id: "personal",
-            title: "Transaçoes",
+            title: "Transações",
             icon: <Transfer className="w-6 h-6" />,
             content: <TransactionsPage />,
         },

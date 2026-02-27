@@ -3,20 +3,20 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader } from "@/components/loader";
-import { motion } from "framer-motion";
 
 import * as z from "zod";
 import { Form, FormItem, FormMessage } from "@/components/ui/form";
 import {
     Loader2,
+    User,
+    Key,
     Eye,
     EyeOff,
     XCircle,
-    LogIn,
-    User,
     Phone,
-    Lock,
-    Link as LinkIcon,
+    Link,
+    ArrowRight,
+    LogIn,
 } from "lucide-react";
 import { toast } from "sonner";
 import { userSignup } from "@/services/transactionsService";
@@ -29,6 +29,19 @@ import { Setting } from "@/types";
 import { asset, formatPhone } from "@/utils/helpers";
 import { AnimatedInput } from "@/components/ui/animated-input";
 
+// Interface para a resposta da API
+export interface SignupResponse {
+    redirect: string;
+    data: {
+        id: number;
+        name: string;
+        phone: string;
+        // outros campos retornados pela API
+    };
+    token: string;
+}
+
+// Schema de validação aprimorado
 const signupSchema = z
     .object({
         name: z
@@ -60,12 +73,15 @@ const SignupForm = () => {
     const [showPasswordConfirmation, setShowPasswordConfirmation] =
         useState(false);
     const [setting, setSetting] = useState<Setting | null>(null);
+    const [internalError, setInternalError] = useState<boolean>(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    // Estado para o valor do telefone com a máscara visível
     const [displayPhone, setDisplayPhone] = useState<string>("");
     const navigate = useNavigate();
     const queryClient = useQueryClient();
     const location = useLocation();
 
+    // Para obter o código de referência dos query params na URL (ex: /signup?ref=ABC123)
     const queryParams = new URLSearchParams(location.search);
     const refCodeFromUrl = queryParams.get("ref") || "";
 
@@ -78,7 +94,7 @@ const SignupForm = () => {
             password_confirmation: "",
             ref_by: refCodeFromUrl,
         },
-        mode: "onChange",
+        mode: "onChange", // Valida enquanto o usuário digita
     });
 
     const handleGetSettings = async () => {
@@ -87,7 +103,9 @@ const SignupForm = () => {
             const settings = await getThemeSetting();
             setSetting(settings);
         } catch (error) {
-            toast.error("Erro ao obter configurações");
+            toast.error("Erro ao obter configurações", {
+                style: { background: "#f5f5f5", color: "#E3001B" },
+            });
         }
     };
 
@@ -95,6 +113,7 @@ const SignupForm = () => {
         handleGetSettings();
     }, []);
 
+    // Atualiza o campo ref_by quando o código de referência na URL mudar
     useEffect(() => {
         if (refCodeFromUrl) {
             form.setValue("ref_by", refCodeFromUrl);
@@ -107,35 +126,73 @@ const SignupForm = () => {
         try {
             setIsLoading(true);
             setError(null);
+            setInternalError(false);
 
             const response = await userSignup(data);
+
             const { token, data: userData } = response;
 
             toast.dismiss(toastId);
-            toast.success("Cadastro realizado com sucesso!");
+            toast.success("Cadastro realizado com sucesso!", {
+                description: "Você será redirecionado para o painel.",
+                duration: 3000,
+            });
 
+            // Obter o cookie CSRF para autenticação Sanctum (Laravel)
             await api.get("/sanctum/csrf-cookie");
+
+            // Armazena os dados do usuário no localStorage, similar ao que é feito no login
             localStorage.setItem("user_data", JSON.stringify(userData));
+
+            // Atualiza o estado de autenticação no queryClient
             queryClient.setQueryData(["auth"], true);
+            // Atualiza os dados do usuário no queryClient
             queryClient.setQueryData(["user"], userData);
 
+            // Redireciona para o dashboard após um pequeno delay para mostrar a mensagem de sucesso
             setTimeout(() => {
                 if (token) navigate("/withdraw_account/setup");
             }, 1500);
         } catch (error) {
             toast.dismiss(toastId);
+
+            // Tratamento de erro melhorado
             if (error instanceof AxiosError) {
                 const apiError = ApiException.fromAxiosError(error);
+                const errorFields = [
+                    "email",
+                    "full_name",
+                    "phone",
+                    "pix_key_type",
+                    "pix_key",
+                ];
+
+                for (const field of errorFields) {
+                    if (apiError.hasErrorFor(field)) {
+                        const errorMessage = apiError.getErrorFor(field);
+                        toast.error(errorMessage);
+                        setError(errorMessage);
+                        return;
+                    }
+                }
+
                 toast.error(apiError.message);
                 setError(apiError.message);
-            } else if (error instanceof ApiException) {
+                return;
+            }
+
+            if (error instanceof ApiException) {
                 setError(error.message);
                 toast.error(error.message);
-            } else {
-                const errorMsg = "Ocorreu um erro durante o cadastro.";
-                toast.error(errorMsg);
-                setError(errorMsg);
+                return;
             }
+
+            // Erro desconhecido
+            const errorMsg =
+                "Ocorreu um erro durante o cadastro. Tente novamente mais tarde.";
+            toast.error(errorMsg);
+            setError(errorMsg);
+            console.error(error);
         } finally {
             setIsLoading(false);
             setIsSubmitting(false);
@@ -144,7 +201,7 @@ const SignupForm = () => {
 
     if (!setting) {
         return (
-            <div className="w-full h-screen flex justify-center items-center bg-gray-50">
+            <div className="w-full h-screen flex justify-center items-center bg-main-gradient">
                 <Loader />
             </div>
         );
@@ -153,203 +210,299 @@ const SignupForm = () => {
     const currentLoading: boolean = isSubmitting || isLoading;
 
     return (
-        <div className="min-h-screen flex items-center justify-center p-6 bg-slate-50 font-sans">
-            <motion.div
-                initial={{ opacity: 0, scale: 0.95 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.4 }}
-                className="w-full max-w-md"
-            >
-                <div className="bg-white p-10 rounded-[40px] shadow-sm border border-gray-100 relative overflow-hidden">
-                    <div className="absolute -bottom-24 -left-24 w-48 h-48 bg-brand/5 rounded-full blur-3xl"></div>
-
-                    <div className="mb-12 text-center relative z-10">
-                        <div className="max-w-[160px] mx-auto mb-8">
-                            <img
-                                src={asset("/assets/images/tradyx-logo-shadow.png")}
-                                alt="Tradyx"
-                                className="w-full grayscale brightness-50"
-                            />
-                        </div>
-                        <h2 className="text-3xl font-bold text-gray-900 mb-2">
-                            Criar Conta
-                        </h2>
-                        <p className="text-sm text-gray-400 font-medium">
-                            Preencha seus dados para começar a investir
-                        </p>
+        <div className="min-h-screen flex items-center justify-center p-6 sm:p-6 bg-main-gradient font-space">
+            {/* Card de Registro: Com bordas de slot machine (arredondadas e com sombra intensa) */}
+            <div className="w-full max-w-md bg-secondary-gradient p-8 sm:p-10 shadow-gradient-[#865dc1,#492067] !rounded-3xl transition-all duration-500 transform hover:scale-[1.01]">
+                {/* Logo Area - Adaptado para o tema escuro */}
+                <div className="mb-10 text-center">
+                    {/* Placeholder para o logo (usando texto estilizado para o tema slot) */}
+                    <div className="text-6xl font-extrabold text-blue-zodiac-500 mb-2 tracking-wider drop-shadow-lg">
+                        <img
+                            src={asset("/assets/images/tradyx-logo-shadow.png")}
+                            alt=""
+                            className="w-24 mx-auto"
+                        />
                     </div>
+                    <p className="text-sm text-tradyx-200 font-semibold">
+                        Crescendo juntos, evoluindo sempre.
+                    </p>
+                </div>
 
-                    {isError && (
-                        <div className="bg-red-50 border border-red-100 p-4 mb-8 rounded-2xl flex items-center gap-3">
-                            <XCircle className="h-5 w-5 text-red-500 shrink-0" />
-                            <p className="text-xs text-red-600 font-bold leading-tight">
-                                {isError}
-                            </p>
+                {/* Títulos e Subtítulos */}
+                <h2 className="text-2xl font-bold text-tradyx-200 mb-2 text-center">
+                    Crie sua Conta
+                </h2>
+                <p className="text-tradyx-200 mb-6 text-center text-xs">
+                    Preencha os dados abaixo para começar a investir.
+                </p>
+
+                {/* Exibição de Erro */}
+                {internalError ||
+                    (isError && (
+                        <div className="shadow-bottom-xl shadow-tradyx-950 bg-transparent rounded-lg">
+                            <div className="bg-gradient-to-br from-red-400 text-tradyx-100 to-red-600 border border-red-600 p-4 mb-6 rounded-lg shadow-inner">
+                                <div className="flex items-center">
+                                    <XCircle className="h-5 w-5 flex-shrink-0" />
+                                    <div className="ml-3">
+                                        <p className="text-sm">
+                                            Falha no cadastro. Verifique os
+                                            dados ou tente outro telefone.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    )}
+                    ))}
 
-                    <Form {...form}>
-                        <form
-                            className="space-y-6 relative z-10"
-                            onSubmit={form.handleSubmit(onSubmit)}
-                        >
-                            <Controller
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <AnimatedInput
-                                            label="Nome Completo"
-                                            name={field.name}
-                                            Logo={User}
-                                            value={field.value}
-                                            placeholder="Seu nome completo"
-                                            onChange={field.onChange}
-                                            onBlur={field.onBlur}
-                                        />
-                                        <FormMessage className="text-xs font-bold text-red-500 ml-1" />
-                                    </FormItem>
-                                )}
-                            />
+                {/* Formulário Tipado */}
+                <Form {...form}>
+                    <form
+                        className="space-y-6"
+                        onSubmit={form.handleSubmit(onSubmit)}
+                    >
+                        {/* Campo Nome */}
+                        <Controller
+                            control={form.control}
+                            name="name"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <AnimatedInput
+                                        label="Nome Completo"
+                                        name={field.name as keyof FormData}
+                                        Logo={User}
+                                        onBlur={field.onBlur}
+                                        onChange={field.onChange}
+                                        placeholder="Seu nome completo"
+                                        value={field.value}
+                                    />
+                                    <FormMessage>
+                                        {/* Mensagem de erro para Nome */}
+                                    </FormMessage>
+                                </FormItem>
+                            )}
+                        />
 
-                            <Controller
-                                control={form.control}
-                                name="phone"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <AnimatedInput
-                                            label="Número de Telefone"
-                                            name={field.name}
-                                            Logo={Phone}
-                                            value={displayPhone}
-                                            placeholder="(00) 00000-0000"
-                                            onChange={(val) => {
-                                                const cleanedValue = val.replace(/\D/g, "");
-                                                setDisplayPhone(formatPhone(cleanedValue));
-                                                field.onChange(cleanedValue);
-                                            }}
-                                            onBlur={field.onBlur}
-                                        />
-                                        <FormMessage className="text-xs font-bold text-red-500 ml-1" />
-                                    </FormItem>
-                                )}
-                            />
+                        {/* Campo Telefone usando Controller */}
+                        <Controller
+                            control={form.control}
+                            name="phone"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <AnimatedInput
+                                        label="Telefone"
+                                        name={field.name as keyof FormData}
+                                        Logo={Phone}
+                                        onBlur={field.onBlur}
+                                        onChange={(e) => {
+                                            const rawValue = e;
+                                            const cleanedValue =
+                                                rawValue.replace(/\D/g, "");
 
-                            <Controller
-                                control={form.control}
-                                name="password"
-                                render={({ field }) => (
-                                    <FormItem className="space-y-2">
-                                        <label className="text-sm font-bold text-gray-900 ml-1 flex items-center gap-2">
-                                            <Lock className="w-4 h-4 text-brand" /> Senha
-                                        </label>
-                                        <div className="relative">
+                                            // 1. Aplica a máscara e atualiza o estado visual
+                                            const maskedValue =
+                                                formatPhone(cleanedValue);
+                                            setDisplayPhone(maskedValue);
+
+                                            // 2. Atualiza o react-hook-form com o valor LIMPO (apenas dígitos)
+                                            field.onChange(cleanedValue);
+                                        }}
+                                        placeholder="(00) 00000-0000"
+                                        value={displayPhone}
+                                    />
+                                    <FormMessage>
+                                        {/* Mensagem de erro para Telefone */}
+                                    </FormMessage>
+                                </FormItem>
+                            )}
+                        />
+
+                        {/* Campo Senha */}
+                        <Controller
+                            control={form.control}
+                            name="password"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <label
+                                        className="block text-sm mb-1 text-tradyx-300 font-medium"
+                                        htmlFor="password"
+                                    >
+                                        Senha
+                                    </label>
+                                    <div className="relative flex items-center">
+                                        <div className="absolute left-0 top-0 bottom-0 flex items-center pl-3 text-tradyx-300">
+                                            <Key className="w-4 h-4" />
+                                        </div>
+                                        <div className="flex-1">
                                             <input
-                                                type={showPassword ? "text" : "password"}
-                                                className="w-full bg-gray-50 border-2 border-transparent focus:border-brand focus:bg-white text-gray-900 font-bold text-base rounded-2xl h-14 px-6 transition-all outline-none placeholder:text-gray-300"
-                                                placeholder="Crie uma senha"
+                                                type={
+                                                    showPassword
+                                                        ? "text"
+                                                        : "password"
+                                                }
+                                                className="w-full bg-morph-back text-tradyx-500 shadow-right border-2 border-tradyx-950 shadow-royal-purple-700 rounded-lg h-10 py-3 pl-10 pr-3 focus:outline-none focus:ring-0 focus:ring-transparent transition-all duration-300 placeholder:text-tradyx-300"
+                                                placeholder="Crie sua senha"
                                                 {...field}
                                             />
                                             <button
                                                 type="button"
-                                                onClick={() => setShowPassword(!showPassword)}
-                                                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-900"
+                                                onClick={() =>
+                                                    setShowPassword(
+                                                        !showPassword
+                                                    )
+                                                }
+                                                className="absolute bg-transparent right-0 top-1/2 transform -translate-y-1/2 pr-3 text-tradyx-300 hover:text-amber-400 transition-colors"
                                             >
-                                                {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                                                {showPassword ? (
+                                                    <EyeOff size={24} />
+                                                ) : (
+                                                    <Eye size={24} />
+                                                )}
                                             </button>
                                         </div>
-                                        <FormMessage className="text-xs font-bold text-red-500 ml-1" />
-                                    </FormItem>
-                                )}
-                            />
+                                    </div>
+                                    <FormMessage>
+                                        {/* Mensagem de erro para Senha */}
+                                    </FormMessage>
+                                </FormItem>
+                            )}
+                        />
 
-                            <Controller
-                                control={form.control}
-                                name="password_confirmation"
-                                render={({ field }) => (
-                                    <FormItem className="space-y-2">
-                                        <label className="text-sm font-bold text-gray-900 ml-1 flex items-center gap-2">
-                                            <Lock className="w-4 h-4 text-brand" /> Confirmar Senha
-                                        </label>
-                                        <div className="relative">
+                        {/* Campo Confirmação de Senha */}
+                        <Controller
+                            control={form.control}
+                            name="password_confirmation"
+                            render={({ field }) => (
+                                <FormItem>
+                                    <label
+                                        className="block text-tradyx-300 text-sm font-semibold"
+                                        htmlFor="password_confirmation"
+                                    >
+                                        Confirme a Senha
+                                    </label>
+                                    <div className="relative flex items-center">
+                                        <div className="absolute left-0 top-0 bottom-0 flex items-center pl-3 text-tradyx-300">
+                                            <Key className="w-4 h-4" />
+                                        </div>
+                                        <div className="flex-1">
                                             <input
-                                                type={showPasswordConfirmation ? "text" : "password"}
-                                                className="w-full bg-gray-50 border-2 border-transparent focus:border-brand focus:bg-white text-gray-900 font-bold text-base rounded-2xl h-14 px-6 transition-all outline-none placeholder:text-gray-300"
+                                                type={
+                                                    showPasswordConfirmation
+                                                        ? "text"
+                                                        : "password"
+                                                }
+                                                className="w-full bg-morph-back text-tradyx-500 shadow-right border-2 border-tradyx-950 shadow-royal-purple-700 rounded-lg h-10 py-3 pl-10 pr-3 focus:outline-none focus:ring-0 focus:ring-transparent transition-all duration-300 placeholder:text-tradyx-300"
                                                 placeholder="Repita sua senha"
                                                 {...field}
                                             />
                                             <button
                                                 type="button"
-                                                onClick={() => setShowPasswordConfirmation(!showPasswordConfirmation)}
-                                                className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-gray-900"
+                                                onClick={() =>
+                                                    setShowPasswordConfirmation(
+                                                        !showPasswordConfirmation
+                                                    )
+                                                }
+                                                className="absolute bg-transparent right-0 top-1/2 transform -translate-y-1/2 pr-3 text-tradyx-300 hover:text-amber-400 transition-colors"
                                             >
-                                                {showPasswordConfirmation ? <EyeOff size={20} /> : <Eye size={20} />}
+                                                {showPasswordConfirmation ? (
+                                                    <EyeOff size={24} />
+                                                ) : (
+                                                    <Eye size={24} />
+                                                )}
                                             </button>
                                         </div>
-                                        <FormMessage className="text-xs font-bold text-red-500 ml-1" />
-                                    </FormItem>
-                                )}
-                            />
+                                    </div>
+                                    <FormMessage>
+                                        {/* Mensagem de erro para Confirmação de Senha */}
+                                    </FormMessage>
+                                </FormItem>
+                            )}
+                        />
 
-                            <Controller
-                                control={form.control}
-                                name="ref_by"
-                                render={({ field }) => (
-                                    <FormItem>
-                                        <AnimatedInput
-                                            label="Código de Indicação (Opcional)"
-                                            name={field.name}
-                                            Logo={LinkIcon}
-                                            value={field.value || ""}
-                                            placeholder="Código de convite"
-                                            readOnly={!!refCodeFromUrl}
+                        {/* Campo Código de Referência (Opcional/Oculto se preenchido) */}
+                        <Controller
+                            control={form.control}
+                            name="ref_by"
+                            render={({ field }) => (
+                                <FormItem>
+                                    {/* Esconde a label se já estiver preenchido pela URL */}
+                                    {!refCodeFromUrl && (
+                                        <label
+                                            className="block text-tradyx-300 text-sm font-semibold mb-1"
+                                            htmlFor="ref_by"
+                                        >
+                                            Código de Referência (Opcional)
+                                        </label>
+                                    )}
+                                    <div className="flex relative items-center">
+                                        <div className="absolute left-0 top-0 bottom-0 flex items-center pl-3 text-tradyx-300">
+                                            <Link className="w-4 h-4" />
+                                        </div>
+                                        <input
+                                            placeholder="Cód. de quem te indicou"
+                                            type="text"
+                                            className={`w-full bg-morph-back text-tradyx-500 shadow-right border-2 border-tradyx-950 shadow-royal-purple-700 rounded-lg h-10 py-3 pl-10 pr-3 focus:outline-none focus:ring-0 focus:ring-transparent transition-all duration-300 placeholder:text-tradyx-300
+                                                     ${
+                                                         refCodeFromUrl
+                                                             ? "opacity-70 cursor-not-allowed"
+                                                             : ""
+                                                     }`}
+                                            readOnly={!!refCodeFromUrl} // Não editável se vier da URL
+                                            value={field.value || ""} // Usa o valor do field, que inclui o valor da URL
                                             onChange={field.onChange}
-                                            onBlur={field.onBlur}
-                                            className={refCodeFromUrl ? "opacity-70 cursor-not-allowed" : ""}
                                         />
-                                        {refCodeFromUrl && (
-                                            <p className="text-[10px] text-brand font-bold uppercase tracking-wider ml-1">
-                                                Aplicando bônus de indicação do link
-                                            </p>
-                                        )}
-                                    </FormItem>
-                                )}
-                            />
+                                    </div>
+                                    {refCodeFromUrl && (
+                                        <p className="text-xs text-amber-400 mt-1 flex items-center">
+                                            <ArrowRight className="w-3 h-3 mr-1" />{" "}
+                                            Você está se registrando através de
+                                            um link de indicação.
+                                        </p>
+                                    )}
+                                </FormItem>
+                            )}
+                        />
 
-                            <button
-                                type="submit"
-                                disabled={currentLoading}
-                                className="w-full bg-brand hover:bg-brand/90 text-gray-900 font-bold text-lg h-16 rounded-2xl shadow-lg shadow-brand/20 transition-all active:scale-[0.98] flex items-center justify-center gap-3 disabled:opacity-50 mt-4"
-                            >
-                                {currentLoading ? (
-                                    <>
-                                        <Loader2 className="h-6 w-6 animate-spin" />
-                                        <span>Criando Conta...</span>
-                                    </>
-                                ) : (
-                                    <>
-                                        <LogIn className="h-6 w-6" />
-                                        <span>Cadastrar</span>
-                                    </>
-                                )}
-                            </button>
+                        {/* Botão de Registro - Estilo "Vibrante/Glow" em Amarelo/Ouro */}
+                        <button
+                            type="submit"
+                            className="w-full mt-8 bg-orange-gradient hover:bg-amber-600 text-sm text-tradyx-50 font-extrabold py-4 px-4 rounded-[15px]
+                                       transition-all duration-300 transform hover:scale-[1.01] shadow-top-inset shadow-cream-can-100
+                                       focus:outline-none focus:ring-4 focus:ring-amber-500/80 flex justify-center items-center group uppercase
+                                       tracking-widest disabled:opacity-50 disabled:shadow-none"
+                            disabled={currentLoading}
+                        >
+                            {currentLoading ? (
+                                <div className="flex items-center justify-center">
+                                    <Loader2 className="h-5 w-5 animate-spin mr-2 text-ebony-clay-900" />
+                                    <span>Criando Conta...</span>
+                                </div>
+                            ) : (
+                                <div className="flex items-center">
+                                    <LogIn className="w-5 h-5 mr-2" />
+                                    <span>CADASTRAR E COMEÇAR</span>
+                                </div>
+                            )}
+                        </button>
 
-                            <div className="text-center pt-2">
-                                <p className="text-sm text-gray-400 font-medium">
-                                    Já tem uma conta?
-                                    <button
-                                        type="button"
-                                        onClick={() => navigate("/login")}
-                                        className="text-brand ml-2 font-bold hover:underline"
-                                    >
-                                        Faça login aqui
-                                    </button>
-                                </p>
-                            </div>
-                        </form>
-                    </Form>
-                </div>
-            </motion.div>
+                        {/* Link de Login */}
+                        <div className="mt-6 text-center">
+                            <p className="text-ebony-clay-400 text-sm">
+                                Já tem uma conta?
+                                <a
+                                    href="/login"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        navigate("/login");
+                                    }}
+                                    className="text-blue-zodiac-400 ml-2 font-semibold hover:text-blue-zodiac-300 transition-colors duration-300"
+                                >
+                                    Fazer Login
+                                </a>
+                            </p>
+                        </div>
+                    </form>
+                </Form>
+            </div>
         </div>
     );
 };

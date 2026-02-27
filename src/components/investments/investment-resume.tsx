@@ -41,7 +41,7 @@ export function InvestmentResume({ p }: InvestmentResumeProps) {
                 <span className="text-xs font-bold text-brand uppercase tracking-wider">
                     {formatTime(timeLeftMs)}
                 </span>
-                <span className="text-[10px] text-gray-300 font-medium">Remaining</span>
+                <span className="text-[10px] text-gray-300 font-medium">Restante</span>
             </div>
         </div>
     );

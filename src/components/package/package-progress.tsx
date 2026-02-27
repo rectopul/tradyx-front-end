@@ -113,49 +113,50 @@ export function PackageProgress({ purchase }: PackageProgressProps) {
             />
 
             {/* 2. O Componente de Progresso Original */}
-            <div className="w-full rounded-xl bg-white p-4 grid grid-cols-[80px_auto] gap-3 shadow-lg">
-                {/* 1. Imagem do Pacote (w-20 fixo) */}
-                <figure className="w-[80px] h-[80px] self-start">
-                    <img
-                        src={asset(
-                            purchase.package
-                                ? purchase.package.photo
-                                : "https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=400"
-                        )}
-                        onError={(e) => {
-                            e.currentTarget.src =
-                                "https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=400";
-                        }}
-                        alt={purchase.package?.name}
-                        className="w-full h-full object-cover rounded-lg border border-gray-200"
-                    />
-                </figure>
+            <div className="w-full rounded-[32px] bg-white p-6 border border-gray-100 shadow-sm">
+                <div className="flex items-start gap-5 mb-6">
+                    <figure className="w-20 h-20 shrink-0">
+                        <img
+                            src={asset(
+                                purchase.package
+                                    ? purchase.package.photo
+                                    : "https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=400"
+                            )}
+                            onError={(e) => {
+                                e.currentTarget.src =
+                                    "https://images.pexels.com/photos/730547/pexels-photo-730547.jpeg?auto=compress&cs=tinysrgb&w=400";
+                            }}
+                            alt={purchase.package?.name}
+                            className="w-full h-full object-cover rounded-2xl border border-gray-100"
+                        />
+                    </figure>
 
-                {/* 2. Conteúdo Principal (Texto e Ações) */}
-                <div className="flex flex-col justify-between">
-                    {/* A. Título e Lucro */}
-                    <div className="flex flex-col mb-2">
-                        <h2 className="text-ebony-clay-950 text-base font-bold truncate">
-                            {purchase.package?.name ?? "Pacote de Investimento"}
+                    <div className="flex flex-col flex-1 min-w-0">
+                        <h2 className="text-gray-900 text-lg font-bold truncate">
+                            {purchase.package?.name ?? "Plano de Investimento"}
                         </h2>
-                        <span className="text-green-600 font-extrabold text-lg mt-0.5">
-                            + {formatCurrency(purchase.daily_income)}
-                        </span>
+                        <div className="flex items-center gap-2 mt-1">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Lucro Atual</span>
+                            <span className="text-emerald-600 font-extrabold text-base">
+                                + {formatCurrency(purchase.daily_income)}
+                            </span>
+                        </div>
                     </div>
+                </div>
 
-                    {/* B. Barra de Progresso e Detalhes */}
-                    {purchase.package && (
-                        <div className="space-y-1 mb-3">
-                            <div className="text-xs text-ebony-clay-500 font-medium flex justify-between">
-                                <span>
-                                    Ciclo: **{daysPassed} / {daysTotal} dias**
+                {purchase.package && (
+                    <div className="space-y-4">
+                        <div className="space-y-2">
+                            <div className="flex justify-between items-end">
+                                <span className="text-xs font-bold text-gray-400">
+                                    Ciclo: <span className="text-gray-900">{daysPassed} de {daysTotal} dias</span>
                                 </span>
-                                <span className="text-emerald-600 font-bold">
+                                <span className="text-sm font-extrabold text-gray-900">
                                     {progress.toFixed(1)}%
                                 </span>
                             </div>
 
-                            <div className="relative w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                            <div className="relative w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                                 <motion.div
                                     initial={{ width: 0 }}
                                     animate={{ width: `${progress}%` }}
@@ -163,44 +164,41 @@ export function PackageProgress({ purchase }: PackageProgressProps) {
                                         duration: 1.2,
                                         ease: "easeInOut",
                                     }}
-                                    className="absolute top-0 left-0 h-full bg-emerald-500 rounded-full"
+                                    className="absolute top-0 left-0 h-full bg-brand rounded-full"
                                 />
                             </div>
-
-                            <div className="text-xs text-ebony-clay-400 mt-1">
-                                Rendimento Diário: **
-                                {formatCurrency(purchase.daily_income)}**
-                            </div>
                         </div>
-                    )}
 
-                    {/* C. Botões de Ação (Linha Dedicada) */}
-                    <div className="flex gap-2 justify-end pt-2 border-t border-gray-100">
-                        {/* Botão de Reinvestir (MAIOR DESTAQUE) */}
-                        <button
-                            className={`flex-1 py-1.5 px-3 rounded-md transition-colors text-white text-xs font-semibold ${
-                                canReinvest
-                                    ? "bg-pacific-blue-600 hover:bg-pacific-blue-500"
-                                    : "bg-gray-400 cursor-not-allowed"
-                            }`}
-                            onClick={() =>
-                                canReinvest && setIsReinvestModalOpen(true)
-                            }
-                            disabled={!canReinvest}
-                        >
-                            Reinvestir
-                        </button>
+                        <div className="flex justify-between items-center py-3 px-4 bg-gray-50 rounded-2xl border border-gray-100/50">
+                            <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Rendimento Diário</span>
+                            <span className="text-sm font-extrabold text-gray-900">{formatCurrency(purchase.daily_income)}</span>
+                        </div>
 
-                        {/* Botão de Resgate */}
-                        <button
-                            className="flex-1 py-1.5 px-3 rounded-md bg-ebony-clay-800 hover:bg-ebony-clay-700 text-ebony-clay-200 text-xs font-semibold disabled:opacity-70"
-                            onClick={handleRedeen}
-                            disabled={!isRedeeming}
-                        >
-                            Resgatar
-                        </button>
+                        <div className="flex gap-3 pt-2">
+                            <button
+                                className={`flex-1 py-4 px-4 rounded-2xl transition-all font-bold text-sm shadow-lg active:scale-[0.98] ${
+                                    canReinvest
+                                        ? "bg-brand text-gray-900 shadow-brand/20"
+                                        : "bg-gray-100 text-gray-400 cursor-not-allowed shadow-none"
+                                }`}
+                                onClick={() =>
+                                    canReinvest && setIsReinvestModalOpen(true)
+                                }
+                                disabled={!canReinvest}
+                            >
+                                Reinvestir
+                            </button>
+
+                            <button
+                                className="flex-1 py-4 px-4 rounded-2xl bg-gray-900 text-white font-bold text-sm shadow-lg shadow-gray-200 active:scale-[0.98] disabled:opacity-50"
+                                onClick={handleRedeen}
+                                disabled={!isRedeeming}
+                            >
+                                Resgatar
+                            </button>
+                        </div>
                     </div>
-                </div>
+                )}
             </div>
         </>
     );

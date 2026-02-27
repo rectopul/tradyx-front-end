@@ -59,7 +59,7 @@ export function TransactionsPage() {
                                                 dep.status === 'pending' ? 'bg-brand/10 text-brand' : 'bg-red-100 text-red-600'
                                             }`}
                                         >
-                                            {dep.status}
+                                            {formatStatus(dep.status)}
                                         </div>
                                     </div>
                                 </div>
@@ -98,7 +98,7 @@ export function TransactionsPage() {
                                                 wth.status === 'pending' ? 'bg-brand/10 text-brand' : 'bg-red-100 text-red-600'
                                             }`}
                                         >
-                                            {wth.status}
+                                            {formatStatus(wth.status as any)}
                                         </div>
                                     </div>
                                 </div>

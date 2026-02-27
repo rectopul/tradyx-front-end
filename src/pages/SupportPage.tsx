@@ -28,7 +28,7 @@ export function SupportPage() {
                         </div>
                         <div className="flex flex-col items-start">
                             <span className="font-bold text-gray-900 text-lg">Suporte via WhatsApp</span>
-                            <span className="text-xs text-gray-400 font-medium">Tempo de resposta mais rápido</span>
+                            <span className="text-xs text-gray-400 font-medium">Resposta instantânea</span>
                         </div>
                     </div>
                     <ChevronRight className="w-6 h-6 text-gray-300" />
@@ -44,7 +44,7 @@ export function SupportPage() {
                         </div>
                         <div className="flex flex-col items-start">
                             <span className="font-bold text-gray-900 text-lg">Comunidade Telegram</span>
-                            <span className="text-xs text-gray-400 font-medium">Participe do nosso grupo</span>
+                            <span className="text-xs text-gray-400 font-medium">Entre em nosso grupo</span>
                         </div>
                     </div>
                     <ChevronRight className="w-6 h-6 text-gray-300" />
